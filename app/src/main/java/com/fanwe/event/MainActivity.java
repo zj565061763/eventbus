@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public boolean onEvent(TestEvent event)
         {
-            //收到post的事件，如果返回true，则停止继续分发事件
             Log.i(TAG, String.valueOf(event));
             return false;
         }
