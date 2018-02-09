@@ -28,7 +28,13 @@ public abstract class FEventObserver<T>
         register();
     }
 
-    public abstract void onEvent(T event);
+    /**
+     * 收到事件通知
+     *
+     * @param event
+     * @return true-停止继续分发事件
+     */
+    public abstract boolean onEvent(T event);
 
     /**
      * 注册当前对象

@@ -103,7 +103,15 @@ public class FEventBus
                     Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
                 }
 
-                ((FEventObserver) item).onEvent(event);
+                final FEventObserver observer = (FEventObserver) item;
+                if (observer.onEvent(event))
+                {
+                    if (mIsDebug)
+                    {
+                        Log.i(FEventBus.class.getSimpleName(), "notify is breaked");
+                    }
+                    break;
+                }
             }
         }
     }
