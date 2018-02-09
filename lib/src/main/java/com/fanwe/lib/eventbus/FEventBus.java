@@ -88,23 +88,22 @@ public class FEventBus
             MAP_OBSERVER.remove(clazz);
         } else
         {
-            int count = 0;
-            final Object[] arrObserver = holder.keySet().toArray();
             if (mIsDebug)
             {
-                Log.i(getClass().getSimpleName(), "post----->" + event + " " + arrObserver.length);
+                Log.i(FEventBus.class.getSimpleName(), "post----->" + event);
             }
-            for (Object item : arrObserver)
-            {
-                FEventObserver observer = (FEventObserver) item;
 
+            int count = 0;
+            final Object[] observers = holder.keySet().toArray();
+            for (Object item : observers)
+            {
                 if (mIsDebug)
                 {
                     count++;
-                    Log.i(getClass().getSimpleName(), "notify " + count + " " + observer);
+                    Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
                 }
 
-                observer.onEvent(event);
+                ((FEventObserver) item).onEvent(event);
             }
         }
     }
@@ -123,7 +122,7 @@ public class FEventBus
         {
             if (!holder.containsKey(observer))
             {
-                Log.i(getClass().getSimpleName(), "register:" + observer + " (" + clazz.getName() + ") " + (holder.size() + 1));
+                Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + ") " + (holder.size() + 1));
             }
         }
         holder.put(observer, 0);
@@ -142,7 +141,7 @@ public class FEventBus
         {
             if (holder.containsKey(observer))
             {
-                Log.e(getClass().getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + ") " + (holder.size() - 1));
+                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + ") " + (holder.size() - 1));
             }
         }
 
