@@ -108,7 +108,7 @@ public class FEventBus
                 {
                     if (mIsDebug)
                     {
-                        Log.e(FEventBus.class.getSimpleName(), "notify is break");
+                        Log.e(FEventBus.class.getSimpleName(), "notify is canceled");
                     }
                     break;
                 }
