@@ -1,5 +1,5 @@
 ## Gradle
-[![](https://jitpack.io/v/zj565061763/event.svg)](https://jitpack.io/#zj565061763/event)
+[![](https://jitpack.io/v/zj565061763/eventbus.svg)](https://jitpack.io/#zj565061763/eventbus)
 
 ## 使用
 ```java
