@@ -90,7 +90,7 @@ public class FEventBus
         {
             if (mIsDebug)
             {
-                Log.i(FEventBus.class.getSimpleName(), "post----->" + event);
+                Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
             }
 
             int count = 0;
@@ -108,7 +108,7 @@ public class FEventBus
                 {
                     if (mIsDebug)
                     {
-                        Log.i(FEventBus.class.getSimpleName(), "notify is breaked");
+                        Log.e(FEventBus.class.getSimpleName(), "notify is break");
                     }
                     break;
                 }
