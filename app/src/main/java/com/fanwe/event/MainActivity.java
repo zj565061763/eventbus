@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity
                 FEventBus.getDefault().post(new TestEvent()); //发送事件
             }
         });
-
     }
 
     @Override
