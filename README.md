@@ -26,14 +26,14 @@ public class MainActivity extends AppCompatActivity
     /**
      * 事件观察者
      */
-    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
+    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>(true)
     {
         @Override
         public void onEvent(TestEvent event)
         {
             Log.i(TAG, String.valueOf(event));
         }
-    }.register(); //注册观察者
+    };
 
     @Override
     protected void onDestroy()
