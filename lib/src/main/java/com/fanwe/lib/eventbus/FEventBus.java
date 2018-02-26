@@ -4,10 +4,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by zhengjun on 2018/1/31.
@@ -107,7 +107,7 @@ public class FEventBus
         List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
-            holder = new ArrayList<>();
+            holder = new CopyOnWriteArrayList<>();
             MAP_OBSERVER.put(clazz, holder);
         }
         if (holder.contains(observer))
