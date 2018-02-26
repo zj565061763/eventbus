@@ -9,11 +9,11 @@ import java.lang.reflect.Type;
 /**
  * 事件观察者
  */
-public abstract class FEventObserver<T>
+public abstract class EventObserver<T>
 {
     final Class<T> mEventClass;
 
-    public FEventObserver()
+    public EventObserver()
     {
         final ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
         final Type[] types = parameterizedType.getActualTypeArguments();
@@ -27,7 +27,7 @@ public abstract class FEventObserver<T>
         register();
     }
 
-    FEventObserver(Class<T> clazz)
+    EventObserver(Class<T> clazz)
     {
         mEventClass = clazz;
     }
@@ -44,7 +44,7 @@ public abstract class FEventObserver<T>
      */
     public final void register()
     {
-        FEventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class FEventObserver<T>
      */
     public final void unregister()
     {
-        FEventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

@@ -16,11 +16,11 @@ import java.util.List;
  * <p>
  * }
  */
-public abstract class FEventObserverGroup
+public abstract class EventObserverContainer
 {
-    private final List<FEventObserver> mListObserver = new ArrayList<>();
+    private final List<EventObserver> mListObserver = new ArrayList<>();
 
-    public FEventObserverGroup()
+    public EventObserverContainer()
     {
         createObserver();
         register();
@@ -28,7 +28,7 @@ public abstract class FEventObserverGroup
 
     public final void register()
     {
-        for (FEventObserver item : mListObserver)
+        for (EventObserver item : mListObserver)
         {
             item.register();
         }
@@ -36,7 +36,7 @@ public abstract class FEventObserverGroup
 
     public final void unregister()
     {
-        for (FEventObserver item : mListObserver)
+        for (EventObserver item : mListObserver)
         {
             item.unregister();
         }
@@ -53,14 +53,14 @@ public abstract class FEventObserverGroup
         for (final Method item : listMethod)
         {
             final Class clazz = item.getParameterTypes()[0];
-            final FEventObserver observer = new FEventObserver(clazz)
+            final EventObserver observer = new EventObserver(clazz)
             {
                 @Override
                 public void onEvent(Object event)
                 {
                     try
                     {
-                        item.invoke(FEventObserverGroup.this, event);
+                        item.invoke(EventObserverContainer.this, event);
                     } catch (Exception e)
                     {
                         onError(e);

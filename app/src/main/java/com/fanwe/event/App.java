@@ -2,7 +2,7 @@ package com.fanwe.event;
 
 import android.app.Application;
 
-import com.fanwe.lib.eventbus.FEventBus;
+import com.fanwe.lib.eventbus.EventBus;
 
 /**
  * Created by Administrator on 2018/2/1.
@@ -14,6 +14,6 @@ public class App extends Application
     public void onCreate()
     {
         super.onCreate();
-        FEventBus.getDefault().setDebug(true);
+        EventBus.getDefault().setDebug(true);
     }
 }
