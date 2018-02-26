@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         {
             Log.i(TAG, String.valueOf(event));
         }
-    };
+    }.register(); //注册观察者
 
     @Override
     protected void onDestroy()

@@ -24,7 +24,6 @@ public abstract class FEventObserver<T>
         {
             throw new RuntimeException("generic type length must be 1");
         }
-        register();
     }
 
     /**
