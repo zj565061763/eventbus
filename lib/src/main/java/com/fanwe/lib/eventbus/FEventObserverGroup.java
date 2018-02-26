@@ -73,24 +73,24 @@ public abstract class FEventObserverGroup
             final int modifiers = item.getModifiers();
             if (Modifier.isStatic(modifiers))
             {
-                throw new RuntimeException("method must not be static :" + item.getName());
+                throw new RuntimeException("method must not be static:" + item);
             }
             if (!Modifier.isPublic(modifiers))
             {
-                throw new RuntimeException("method must be public:" + item.getName());
+                throw new RuntimeException("method must be public:" + item);
             }
             if (!"void".equals(item.getReturnType().getSimpleName()))
             {
-                throw new RuntimeException("method return type must be void:" + item.getName());
+                throw new RuntimeException("method return type must be void:" + item);
             }
             Class<?>[] params = item.getParameterTypes();
             if (params.length != 1)
             {
-                throw new RuntimeException("method params length must be 1:" + item.getName());
+                throw new RuntimeException("method params length must be 1:" + item);
             }
             if (params[0].isPrimitive())
             {
-                throw new RuntimeException("method params must not be primitive:" + item.getName());
+                throw new RuntimeException("method params must not be primitive:" + item);
             }
             item.setAccessible(true);
             listMethod.add(item);
