@@ -28,14 +28,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        /**
-         * 设置观察者所在的Activity
-         *
-         * 如果调用此方法设置一个Activity对象，则会在该Activity生命周期onDestroy()的时候自动取消注册观察者
-         * 如果不调用此方法，则要在适当的地方调用取消注册观察者(mEventObserver.unregister())，否则会内存泄漏
-         */
-        mEventObserver.setActivity(this);
-        mEventObserverContainer.setActivity(this);
     }
 
     @Override
@@ -92,7 +84,10 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
-//        mEventObserver.unregister();
-//        mEventObserverContainer.unregister();
+        /**
+         * 取消注册观察者
+         */
+        mEventObserver.unregister();
+        mEventObserverContainer.unregister();
     }
 }

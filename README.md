@@ -18,29 +18,30 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                FEventBus.getDefault().post(new TestEvent()); //发送事件
+                EventBus.getDefault().post(new TestEvent()); //发送事件
             }
         });
+
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        FEventBus.getDefault().post(new OnResumeEvent()); //发送事件
+        EventBus.getDefault().post(new OnResumeEvent()); //发送事件
     }
 
     @Override
     protected void onStop()
     {
         super.onStop();
-        FEventBus.getDefault().post(new OnStopEvent()); //发送事件
+        EventBus.getDefault().post(new OnStopEvent()); //发送事件
     }
 
     /**
      * 接收事件方式一
      */
-    private FEventObserverGroup mEventObserverGroup = new FEventObserverGroup()
+    private EventObserverContainer mEventObserverContainer = new EventObserverContainer()
     {
         /**
          * 定义public权限，无返回值，参数长度为1个的方法
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 接收事件方式二
      */
-    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
+    private EventObserver<TestEvent> mEventObserver = new EventObserver<TestEvent>()
     {
         @Override
         public void onEvent(TestEvent event)
@@ -78,10 +79,10 @@ public class MainActivity extends AppCompatActivity
     {
         super.onDestroy();
         /**
-         * 取消注册，否则会造成内存泄漏
+         * 取消注册观察者
          */
         mEventObserver.unregister();
-        mEventObserverGroup.unregister();
+        mEventObserverContainer.unregister();
     }
 }
 ```
