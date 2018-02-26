@@ -89,12 +89,29 @@ public abstract class FEventObserver<T>
         return mLifecycleHolder;
     }
 
+    /**
+     * 设置Activity对象
+     * <br>
+     * 当该Activity对象onDestroy()被触发的时候会取消注册当前观察者
+     *
+     * @param activity
+     * @return
+     */
     public final FEventObserver<T> setActivity(Activity activity)
     {
         getLifecycleHolder().setActivity(activity);
         return this;
     }
 
+    /**
+     * 设置View对象
+     * <br>
+     * 当该View对象Attached的时候会注册当前观察者对象
+     * 当该View对象Detached的时候会取消注册当前观察者对象
+     *
+     * @param view
+     * @return
+     */
     public final FEventObserver<T> setView(View view)
     {
         getLifecycleHolder().setView(view);
