@@ -16,12 +16,7 @@ public abstract class FEventObserver<T>
 {
     final Class<T> mEventClass;
 
-    /**
-     * 构造方法
-     *
-     * @param register true-构造方法里面直接注册当前观察者
-     */
-    public FEventObserver(boolean register)
+    public FEventObserver()
     {
         final ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
         final Type[] types = parameterizedType.getActualTypeArguments();
@@ -31,11 +26,6 @@ public abstract class FEventObserver<T>
         } else
         {
             throw new RuntimeException("generic type length must be 1");
-        }
-
-        if (register)
-        {
-            register();
         }
     }
 
