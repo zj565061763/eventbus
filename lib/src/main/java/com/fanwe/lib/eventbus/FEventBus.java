@@ -4,9 +4,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * Created by zhengjun on 2018/1/31.
@@ -14,7 +15,7 @@ import java.util.WeakHashMap;
 public class FEventBus
 {
     private static FEventBus sInstance;
-    private final Map<Class, Map<FEventObserver, Object>> MAP_OBSERVER = new HashMap<>();
+    private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new HashMap<>();
     private Handler mHandler;
 
     private boolean mIsDebug;
@@ -77,34 +78,25 @@ public class FEventBus
         }
 
         final Class clazz = event.getClass();
-        final Map<FEventObserver, Object> holder = MAP_OBSERVER.get(clazz);
+        final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
             return;
         }
 
-        if (holder.isEmpty())
+        if (mIsDebug)
         {
-            MAP_OBSERVER.remove(clazz);
-        } else
+            Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
+        }
+        int count = 0;
+        for (FEventObserver item : holder)
         {
+            item.onEvent(event);
+
             if (mIsDebug)
             {
-                Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
-            }
-
-            int count = 0;
-            final Object[] observers = holder.keySet().toArray();
-            for (Object item : observers)
-            {
-                if (mIsDebug)
-                {
-                    count++;
-                    Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
-                }
-
-                final FEventObserver observer = (FEventObserver) item;
-                observer.onEvent(event);
+                count++;
+                Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
             }
         }
     }
@@ -112,41 +104,40 @@ public class FEventBus
     synchronized void register(final FEventObserver<?> observer)
     {
         final Class clazz = observer.mEventClass;
-        Map<FEventObserver, Object> holder = MAP_OBSERVER.get(clazz);
+        List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
-            holder = new WeakHashMap<>();
+            holder = new ArrayList<>();
             MAP_OBSERVER.put(clazz, holder);
         }
+        if (holder.contains(observer))
+        {
+            return;
+        }
 
+        holder.add(observer);
         if (mIsDebug)
         {
-            if (!holder.containsKey(observer))
-            {
-                Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + ") " + (holder.size() + 1));
-            }
+            Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
         }
-        holder.put(observer, 0);
     }
 
     synchronized void unregister(final FEventObserver<?> observer)
     {
         final Class clazz = observer.mEventClass;
-        final Map<FEventObserver, Object> holder = MAP_OBSERVER.get(clazz);
+        final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
             return;
         }
 
-        if (mIsDebug)
+        if (holder.remove(observer))
         {
-            if (holder.containsKey(observer))
+            if (mIsDebug)
             {
-                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + ") " + (holder.size() - 1));
+                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
             }
         }
-
-        holder.remove(observer);
         if (holder.isEmpty())
         {
             MAP_OBSERVER.remove(clazz);

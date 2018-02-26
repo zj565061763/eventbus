@@ -84,8 +84,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onDestroy();
         /**
-         * 取消注册后将不再接收事件
-         * FEventBus内部是用弱引用，所以不取消注册也不会内存泄漏，但是建议显式取消注册，有利于提高事件分发效率
+         * 取消注册，否则会造成内存泄漏
          */
         mEventObserver.unregister();
         mEventObserverGroup.unregister();
