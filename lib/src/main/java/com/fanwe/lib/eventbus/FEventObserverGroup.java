@@ -14,7 +14,7 @@ public abstract class FEventObserverGroup
 
     public FEventObserverGroup()
     {
-        createObservers();
+        createObserver();
         register();
     }
 
@@ -39,7 +39,7 @@ public abstract class FEventObserverGroup
 
     }
 
-    private void createObservers()
+    private void createObserver()
     {
         List<Method> listMethod = getEventMethod();
         for (final Method item : listMethod)
