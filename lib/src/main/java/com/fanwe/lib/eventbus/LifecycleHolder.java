@@ -28,7 +28,7 @@ public final class LifecycleHolder
         return mActivity == null ? null : mActivity.get();
     }
 
-    public synchronized void setActivity(Activity activity)
+    public void setActivity(Activity activity)
     {
         Activity old = getActivity();
         if (old != activity)
@@ -106,7 +106,7 @@ public final class LifecycleHolder
         return mView == null ? null : mView.get();
     }
 
-    public synchronized void setView(View view)
+    public void setView(View view)
     {
         View old = getView();
         if (old != view)
