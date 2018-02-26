@@ -1,0 +1,101 @@
+package com.fanwe.lib.eventbus;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by zhengjun on 2018/2/24.
+ */
+public abstract class FEventObserverGroup
+{
+    private final List<FEventObserver> mListObserver = new ArrayList<>();
+
+    public FEventObserverGroup()
+    {
+        createObservers();
+        register();
+    }
+
+    public final void register()
+    {
+        for (FEventObserver item : mListObserver)
+        {
+            item.register();
+        }
+    }
+
+    public final void unregister()
+    {
+        for (FEventObserver item : mListObserver)
+        {
+            item.unregister();
+        }
+    }
+
+    public void onError(Exception e)
+    {
+
+    }
+
+    private void createObservers()
+    {
+        List<Method> listMethod = getEventMethod();
+        for (final Method item : listMethod)
+        {
+            final Class clazz = item.getParameterTypes()[0];
+            final FEventObserver observer = new FEventObserver(clazz)
+            {
+                @Override
+                public void onEvent(Object event)
+                {
+                    try
+                    {
+                        item.invoke(FEventObserverGroup.this, event);
+                    } catch (Exception e)
+                    {
+                        onError(e);
+                    }
+                }
+            };
+            mListObserver.add(observer);
+        }
+    }
+
+    private List<Method> getEventMethod()
+    {
+        List<Method> listMethod = new ArrayList<>();
+
+        Method[] methods = getClass().getDeclaredMethods();
+        for (Method item : methods)
+        {
+            final int modifiers = item.getModifiers();
+            if (Modifier.isStatic(modifiers))
+            {
+                throw new RuntimeException("method must not be static :" + item.getName());
+            }
+            if (!Modifier.isPublic(modifiers))
+            {
+                throw new RuntimeException("method must be public:" + item.getName());
+            }
+            if (!"void".equals(item.getReturnType().getSimpleName()))
+            {
+                throw new RuntimeException("method return type must be void:" + item.getName());
+            }
+            Class<?>[] params = item.getParameterTypes();
+            if (params.length != 1)
+            {
+                throw new RuntimeException("method params length must be 1:" + item.getName());
+            }
+            if (params[0].isPrimitive())
+            {
+                throw new RuntimeException("method params must not be primitive:" + item.getName());
+            }
+            item.setAccessible(true);
+            listMethod.add(item);
+        }
+
+        return listMethod;
+    }
+}

@@ -104,14 +104,7 @@ public class FEventBus
                 }
 
                 final FEventObserver observer = (FEventObserver) item;
-                if (observer.onEvent(event))
-                {
-                    if (mIsDebug)
-                    {
-                        Log.e(FEventBus.class.getSimpleName(), "notify is canceled");
-                    }
-                    break;
-                }
+                observer.onEvent(event);
             }
         }
     }
