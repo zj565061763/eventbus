@@ -38,24 +38,18 @@ public abstract class FEventObserver<T>
 
     /**
      * 注册当前对象
-     *
-     * @return
      */
-    public final FEventObserver<T> register()
+    public final void register()
     {
         FEventBus.getDefault().register(this);
-        return this;
     }
 
     /**
      * 取消注册当前对象
-     *
-     * @return
      */
-    public final FEventObserver<T> unregister()
+    public final void unregister()
     {
         FEventBus.getDefault().unregister(this);
-        return this;
     }
 
     @Override
