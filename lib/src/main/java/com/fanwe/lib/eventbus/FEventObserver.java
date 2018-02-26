@@ -27,11 +27,6 @@ public abstract class FEventObserver<T>
         register();
     }
 
-    FEventObserver(Class<T> clazz)
-    {
-        mEventClass = clazz;
-    }
-
     /**
      * 收到事件通知
      *
@@ -41,25 +36,24 @@ public abstract class FEventObserver<T>
 
     /**
      * 注册当前对象
+     *
+     * @return
      */
-    public final void register()
+    public final FEventObserver<T> register()
     {
         FEventBus.getDefault().register(this);
+        return this;
     }
 
     /**
      * 取消注册当前对象
+     *
+     * @return
      */
-    public final void unregister()
+    public final FEventObserver<T> unregister()
     {
         FEventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    protected void finalize() throws Throwable
-    {
-        super.finalize();
-        unregister();
+        return this;
     }
 
     private LifecycleHolder mLifecycleHolder;

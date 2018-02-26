@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.fanwe.lib.eventbus.FEventBus;
 import com.fanwe.lib.eventbus.FEventObserver;
-import com.fanwe.lib.eventbus.FEventObserverContainer;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -29,46 +28,8 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        FEventBus.getDefault().post(new OnResumeEvent()); //发送事件
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        FEventBus.getDefault().post(new OnStopEvent()); //发送事件
-    }
-
     /**
-     * 接收事件方式一
-     */
-    private FEventObserverContainer mEventObserverContainer = new FEventObserverContainer()
-    {
-        /**
-         * 定义public权限，无返回值，参数长度为1个的方法
-         * @param event
-         */
-        public void onEvent(OnResumeEvent event)
-        {
-            Log.i(TAG, "group:" + String.valueOf(event));
-        }
-
-        /**
-         * 定义public权限，无返回值，参数长度为1个的方法
-         * @param event
-         */
-        public void onEvent(OnStopEvent event)
-        {
-            Log.i(TAG, "group:" + String.valueOf(event));
-        }
-    };
-
-    /**
-     * 接收事件方式二
+     * 事件观察者
      */
     private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
     {
@@ -87,6 +48,5 @@ public class MainActivity extends AppCompatActivity
          * 取消注册观察者，否则会造成内存泄漏
          */
         mEventObserver.unregister();
-        mEventObserverContainer.unregister();
     }
 }
