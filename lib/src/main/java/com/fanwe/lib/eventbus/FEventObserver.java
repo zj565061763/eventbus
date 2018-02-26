@@ -17,12 +17,12 @@ public abstract class FEventObserver<T>
     {
         final ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
         final Type[] types = parameterizedType.getActualTypeArguments();
-        if (types != null && types.length > 0)
+        if (types != null && types.length == 1)
         {
             mEventClass = (Class<T>) types[0];
         } else
         {
-            throw new RuntimeException("generic type not found");
+            throw new RuntimeException("generic type length must be 1");
         }
         register();
     }
@@ -56,9 +56,11 @@ public abstract class FEventObserver<T>
         return this;
     }
 
+    //---------- Lifecycle start ----------
+
     private LifecycleHolder mLifecycleHolder;
 
-    public LifecycleHolder getLifecycleHolder()
+    private LifecycleHolder getLifecycleHolder()
     {
         if (mLifecycleHolder == null)
         {
@@ -86,4 +88,18 @@ public abstract class FEventObserver<T>
         }
         return mLifecycleHolder;
     }
+
+    public final FEventObserver<T> setActivity(Activity activity)
+    {
+        getLifecycleHolder().setActivity(activity);
+        return this;
+    }
+
+    public final FEventObserver<T> setView(View view)
+    {
+        getLifecycleHolder().setView(view);
+        return this;
+    }
+
+    //---------- Lifecycle end ----------
 }

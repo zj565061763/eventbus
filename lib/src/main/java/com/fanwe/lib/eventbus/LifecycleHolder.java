@@ -10,11 +10,11 @@ import java.lang.ref.WeakReference;
 /**
  * Created by zhengjun on 2018/2/26.
  */
-public final class LifecycleHolder
+final class LifecycleHolder
 {
     private Callback mCallback;
 
-    void setCallback(Callback callback)
+    public void setCallback(Callback callback)
     {
         mCallback = callback;
     }
@@ -33,19 +33,29 @@ public final class LifecycleHolder
         Activity old = getActivity();
         if (old != activity)
         {
-            if (old != null)
-            {
-                old.getApplication().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
-            }
-
             if (activity != null)
             {
                 mActivity = new WeakReference<>(activity);
-                activity.getApplication().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
+                registerActivityLifecycleCallbacks(true);
             } else
             {
                 mActivity = null;
+                registerActivityLifecycleCallbacks(false);
             }
+        }
+    }
+
+    private void registerActivityLifecycleCallbacks(boolean register)
+    {
+        final Application application = FEventBus.getDefault().mApplication;
+
+        if (register)
+        {
+            application.unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
+            application.registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
+        } else
+        {
+            application.unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         }
     }
 

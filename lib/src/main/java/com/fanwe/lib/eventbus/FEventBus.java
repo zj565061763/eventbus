@@ -1,5 +1,7 @@
 package com.fanwe.lib.eventbus;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -17,6 +19,7 @@ public class FEventBus
     private static FEventBus sInstance;
     private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new HashMap<>();
     private Handler mHandler;
+    Application mApplication;
 
     private boolean mIsDebug;
 
@@ -51,6 +54,20 @@ public class FEventBus
             mHandler = new Handler(Looper.getMainLooper());
         }
         return mHandler;
+    }
+
+    public void init(Context context)
+    {
+        if (mApplication == null)
+        {
+            synchronized (FEventBus.class)
+            {
+                if (mApplication == null)
+                {
+                    mApplication = (Application) context.getApplicationContext();
+                }
+            }
+        }
     }
 
     /**
