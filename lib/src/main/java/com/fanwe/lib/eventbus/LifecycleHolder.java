@@ -3,6 +3,7 @@ package com.fanwe.lib.eventbus;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.view.View;
 
 import java.lang.ref.WeakReference;
 
@@ -11,14 +12,16 @@ import java.lang.ref.WeakReference;
  */
 final class LifecycleHolder
 {
-    private WeakReference<Activity> mActivity;
-
     private Callback mCallback;
 
     public void setCallback(Callback callback)
     {
         mCallback = callback;
     }
+
+    //---------- Activity start ----------
+
+    private WeakReference<Activity> mActivity;
 
     private Activity getActivity()
     {
@@ -92,8 +95,67 @@ final class LifecycleHolder
         }
     };
 
+    //---------- Activity end ----------
+
+    //---------- View start ----------
+
+    private WeakReference<View> mView;
+
+    private View getView()
+    {
+        return mView == null ? null : mView.get();
+    }
+
+    public synchronized void setView(View view)
+    {
+        View old = getView();
+        if (old != view)
+        {
+            if (old != null)
+            {
+                old.removeOnAttachStateChangeListener(mOnAttachStateChangeListener);
+            }
+
+            if (view != null)
+            {
+                mView = new WeakReference<>(view);
+                view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
+            } else
+            {
+                mView = null;
+            }
+        }
+    }
+
+    private View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()
+    {
+        @Override
+        public void onViewAttachedToWindow(View v)
+        {
+            if (mCallback != null)
+            {
+                mCallback.onViewAttachedToWindow(v);
+            }
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(View v)
+        {
+            if (mCallback != null)
+            {
+                mCallback.onViewDetachedFromWindow(v);
+            }
+        }
+    };
+
+    //---------- View end ----------
+
     public interface Callback
     {
         void onActivityDestroyed(Activity activity);
+
+        void onViewAttachedToWindow(View v);
+
+        void onViewDetachedFromWindow(View v);
     }
 }

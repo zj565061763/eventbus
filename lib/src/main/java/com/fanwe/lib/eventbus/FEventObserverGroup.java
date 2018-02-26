@@ -1,6 +1,7 @@
 package com.fanwe.lib.eventbus;
 
 import android.app.Activity;
+import android.view.View;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -122,6 +123,18 @@ public abstract class FEventObserverGroup
                 {
                     unregister();
                 }
+
+                @Override
+                public void onViewAttachedToWindow(View v)
+                {
+                    register();
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v)
+                {
+                    unregister();
+                }
             });
         }
         return mLifecycleHolder;
@@ -130,6 +143,11 @@ public abstract class FEventObserverGroup
     public final void setActivity(Activity activity)
     {
         getLifecycleHolder().setActivity(activity);
+    }
+
+    public final void setView(View view)
+    {
+        getLifecycleHolder().setView(view);
     }
 
     //---------- Lifecycle end ----------
