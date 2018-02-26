@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zhengjun on 2018/2/24.
+ * 在这个类的实现类里面定义要接收的事件的方法即可接收事件，如：
+ * <p>
+ * public void onEvent(Event event)
+ * {
+ * <p>
+ * }
  */
 public abstract class FEventObserverGroup
 {
