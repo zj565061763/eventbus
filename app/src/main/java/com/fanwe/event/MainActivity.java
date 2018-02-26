@@ -27,6 +27,15 @@ public class MainActivity extends AppCompatActivity
                 FEventBus.getDefault().post(new TestEvent()); //发送事件
             }
         });
+
+        /**
+         * 设置观察者所在的Activity
+         *
+         * 如果调用此方法设置一个Activity对象，则会在该Activity生命周期onDestroy()的时候自动取消注册观察者
+         * 如果不调用此方法，则要在适当的地方调用取消注册观察者(mEventObserver.unregister())，否则会内存泄漏
+         */
+        mEventObserver.setActivity(this);
+        mEventObserverGroup.setActivity(this);
     }
 
     @Override
@@ -78,15 +87,4 @@ public class MainActivity extends AppCompatActivity
             Log.i(TAG, String.valueOf(event));
         }
     };
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        /**
-         * 取消注册，否则会造成内存泄漏
-         */
-        mEventObserver.unregister();
-        mEventObserverGroup.unregister();
-    }
 }

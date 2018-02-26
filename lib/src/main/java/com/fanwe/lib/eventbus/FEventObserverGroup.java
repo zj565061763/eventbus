@@ -1,5 +1,7 @@
 package com.fanwe.lib.eventbus;
 
+import android.app.Activity;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -103,4 +105,32 @@ public abstract class FEventObserverGroup
 
         return listMethod;
     }
+
+    //---------- Lifecycle start ----------
+
+    private LifecycleHolder mLifecycleHolder;
+
+    private LifecycleHolder getLifecycleHolder()
+    {
+        if (mLifecycleHolder == null)
+        {
+            mLifecycleHolder = new LifecycleHolder();
+            mLifecycleHolder.setCallback(new LifecycleHolder.Callback()
+            {
+                @Override
+                public void onActivityDestroyed(Activity activity)
+                {
+                    unregister();
+                }
+            });
+        }
+        return mLifecycleHolder;
+    }
+
+    public final void setActivity(Activity activity)
+    {
+        getLifecycleHolder().setActivity(activity);
+    }
+
+    //---------- Lifecycle end ----------
 }
