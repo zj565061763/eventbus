@@ -3,6 +3,8 @@ package com.fanwe.lib.eventbus;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -33,22 +35,36 @@ final class LifecycleHolder
         Activity old = getActivity();
         if (old != activity)
         {
+            if (old != null)
+            {
+                registerActivityLifecycleCallbacks(false, old);
+            }
+
             if (activity != null)
             {
                 mActivity = new WeakReference<>(activity);
-                registerActivityLifecycleCallbacks(true);
+                registerActivityLifecycleCallbacks(true, activity);
             } else
             {
                 mActivity = null;
-                registerActivityLifecycleCallbacks(false);
             }
         }
     }
 
-    private void registerActivityLifecycleCallbacks(boolean register)
+    private void registerActivityLifecycleCallbacks(final boolean register, final Activity activity)
     {
-        final Application application = FEventBus.getDefault().mApplication;
+        new Handler(Looper.getMainLooper()).post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                registerActivityLifecycleCallbacks(register, activity.getApplication());
+            }
+        });
+    }
 
+    private void registerActivityLifecycleCallbacks(boolean register, Application application)
+    {
         if (register)
         {
             application.unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);

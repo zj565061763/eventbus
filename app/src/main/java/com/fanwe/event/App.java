@@ -14,7 +14,6 @@ public class App extends Application
     public void onCreate()
     {
         super.onCreate();
-        FEventBus.getDefault().init(this);
         FEventBus.getDefault().setDebug(true);
     }
 }
