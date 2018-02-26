@@ -25,7 +25,7 @@ final class LifecycleHolder
         return mActivity == null ? null : mActivity.get();
     }
 
-    public void setActivity(Activity activity)
+    public synchronized void setActivity(Activity activity)
     {
         Activity old = getActivity();
         if (old != activity)
