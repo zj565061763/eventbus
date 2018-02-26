@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.fanwe.lib.eventbus.EventBus;
-import com.fanwe.lib.eventbus.EventObserver;
-import com.fanwe.lib.eventbus.EventObserverContainer;
+import com.fanwe.lib.eventbus.FEventBus;
+import com.fanwe.lib.eventbus.FEventObserver;
+import com.fanwe.lib.eventbus.FEventObserverContainer;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                EventBus.getDefault().post(new TestEvent()); //发送事件
+                FEventBus.getDefault().post(new TestEvent()); //发送事件
             }
         });
 
@@ -34,20 +34,20 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        EventBus.getDefault().post(new OnResumeEvent()); //发送事件
+        FEventBus.getDefault().post(new OnResumeEvent()); //发送事件
     }
 
     @Override
     protected void onStop()
     {
         super.onStop();
-        EventBus.getDefault().post(new OnStopEvent()); //发送事件
+        FEventBus.getDefault().post(new OnStopEvent()); //发送事件
     }
 
     /**
      * 接收事件方式一
      */
-    private EventObserverContainer mEventObserverContainer = new EventObserverContainer()
+    private FEventObserverContainer mEventObserverContainer = new FEventObserverContainer()
     {
         /**
          * 定义public权限，无返回值，参数长度为1个的方法
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 接收事件方式二
      */
-    private EventObserver<TestEvent> mEventObserver = new EventObserver<TestEvent>()
+    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
     {
         @Override
         public void onEvent(TestEvent event)
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
     {
         super.onDestroy();
         /**
-         * 取消注册观察者
+         * 取消注册观察者，否则会造成内存泄漏
          */
         mEventObserver.unregister();
         mEventObserverContainer.unregister();

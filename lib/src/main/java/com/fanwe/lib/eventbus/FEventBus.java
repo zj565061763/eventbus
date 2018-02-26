@@ -12,27 +12,27 @@ import java.util.Map;
 /**
  * Created by zhengjun on 2018/1/31.
  */
-public class EventBus
+public class FEventBus
 {
-    private static EventBus sInstance;
-    private final Map<Class, List<EventObserver>> MAP_OBSERVER = new HashMap<>();
+    private static FEventBus sInstance;
+    private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new HashMap<>();
     private Handler mHandler;
 
     private boolean mIsDebug;
 
-    private EventBus()
+    private FEventBus()
     {
     }
 
-    public static EventBus getDefault()
+    public static FEventBus getDefault()
     {
         if (sInstance == null)
         {
-            synchronized (EventBus.class)
+            synchronized (FEventBus.class)
             {
                 if (sInstance == null)
                 {
-                    sInstance = new EventBus();
+                    sInstance = new FEventBus();
                 }
             }
         }
@@ -71,14 +71,14 @@ public class EventBus
                 @Override
                 public void run()
                 {
-                    EventBus.this.post(event);
+                    FEventBus.this.post(event);
                 }
             });
             return;
         }
 
         final Class clazz = event.getClass();
-        final List<EventObserver> holder = MAP_OBSERVER.get(clazz);
+        final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
             return;
@@ -86,25 +86,25 @@ public class EventBus
 
         if (mIsDebug)
         {
-            Log.i(EventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
+            Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
         }
         int count = 0;
-        for (EventObserver item : holder)
+        for (FEventObserver item : holder)
         {
             item.onEvent(event);
 
             if (mIsDebug)
             {
                 count++;
-                Log.i(EventBus.class.getSimpleName(), "notify " + count + " " + item);
+                Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
             }
         }
     }
 
-    synchronized void register(final EventObserver<?> observer)
+    synchronized void register(final FEventObserver<?> observer)
     {
         final Class clazz = observer.mEventClass;
-        List<EventObserver> holder = MAP_OBSERVER.get(clazz);
+        List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
             holder = new ArrayList<>();
@@ -118,14 +118,14 @@ public class EventBus
         holder.add(observer);
         if (mIsDebug)
         {
-            Log.i(EventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
+            Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
         }
     }
 
-    synchronized void unregister(final EventObserver<?> observer)
+    synchronized void unregister(final FEventObserver<?> observer)
     {
         final Class clazz = observer.mEventClass;
-        final List<EventObserver> holder = MAP_OBSERVER.get(clazz);
+        final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
             return;
@@ -135,7 +135,7 @@ public class EventBus
         {
             if (mIsDebug)
             {
-                Log.e(EventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
+                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
             }
         }
         if (holder.isEmpty())
