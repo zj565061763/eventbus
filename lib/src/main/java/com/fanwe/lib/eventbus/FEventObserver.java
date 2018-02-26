@@ -1,6 +1,9 @@
 package com.fanwe.lib.eventbus;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import java.lang.reflect.ParameterizedType;
@@ -77,12 +80,6 @@ public abstract class FEventObserver<T>
             mLifecycleHolder.setCallback(new LifecycleHolder.Callback()
             {
                 @Override
-                public void onActivityDestroyed(Activity activity)
-                {
-                    unregister();
-                }
-
-                @Override
                 public void onViewAttachedToWindow(View v)
                 {
                     register();
@@ -99,16 +96,40 @@ public abstract class FEventObserver<T>
     }
 
     /**
-     * 设置Activity对象
-     * <br>
-     * 当该Activity对象onDestroy()被触发的时候会取消注册当前观察者
+     * {@link #setLifecycle(View)}
      *
      * @param activity
      * @return
      */
-    public final FEventObserver<T> setActivity(Activity activity)
+    public final FEventObserver<T> setLifecycle(final Activity activity)
     {
-        getLifecycleHolder().setActivity(activity);
+        new Handler(Looper.getMainLooper()).post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                setLifecycle(activity.getWindow().getDecorView());
+            }
+        });
+        return this;
+    }
+
+    /**
+     * {@link #setLifecycle(View)}
+     *
+     * @param dialog
+     * @return
+     */
+    public final FEventObserver<T> setLifecycle(final Dialog dialog)
+    {
+        new Handler(Looper.getMainLooper()).post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                setLifecycle(dialog.getWindow().getDecorView());
+            }
+        });
         return this;
     }
 
@@ -121,7 +142,7 @@ public abstract class FEventObserver<T>
      * @param view
      * @return
      */
-    public final FEventObserver<T> setView(View view)
+    public final FEventObserver<T> setLifecycle(View view)
     {
         getLifecycleHolder().setView(view);
         return this;
