@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
 
 ## 绑定生命周期
 
-设置生命周期对象，支持Activity，Dialog，View<br>
+设置生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View<br>
 底层的实现方案：View在Attached的时候注册观察者，View在Detached的时候取消注册观察者 <br>
 
 Activity 绑定的View对象 -> Activity.getWindow().getDecorView() <br>
