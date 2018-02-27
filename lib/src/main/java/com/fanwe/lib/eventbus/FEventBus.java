@@ -17,6 +17,7 @@ public class FEventBus
     private static FEventBus sInstance;
     private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new HashMap<>();
     private Handler mHandler;
+    private int mRegisterCount;
 
     private boolean mIsDebug;
 
@@ -116,9 +117,10 @@ public class FEventBus
         }
 
         holder.add(observer);
+        mRegisterCount++;
         if (mIsDebug)
         {
-            Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
+            Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + " " + holder.size() + ") " + mRegisterCount);
         }
     }
 
@@ -133,9 +135,10 @@ public class FEventBus
 
         if (holder.remove(observer))
         {
+            mRegisterCount--;
             if (mIsDebug)
             {
-                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + ") " + (holder.size()));
+                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + " " + holder.size() + ") " + mRegisterCount);
             }
         }
         if (holder.isEmpty())
