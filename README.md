@@ -87,6 +87,6 @@ public class MainActivity extends AppCompatActivity
         {
             Log.i(TAG, String.valueOf(event));
         }
-    }.setLifecycle(this); //设置生命周期对象
+    }.setLifecycle(this); //设置生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
 }
 ```
