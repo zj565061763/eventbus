@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FEventBus
 {
     private static FEventBus sInstance;
-    private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new HashMap<>();
+    private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new LinkedHashMap<>();
     private Handler mHandler;
 
     private boolean mIsDebug;
