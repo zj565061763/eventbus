@@ -69,15 +69,15 @@ public abstract class FEventObserver<T>
             mLifecycleHolder = new LifecycleHolder(new LifecycleHolder.Callback()
             {
                 @Override
-                public void onViewAttachedToWindow(View v)
+                public void onStateChanged(boolean enable)
                 {
-                    register();
-                }
-
-                @Override
-                public void onViewDetachedFromWindow(View v)
-                {
-                    unregister();
+                    if (enable)
+                    {
+                        register();
+                    } else
+                    {
+                        unregister();
+                    }
                 }
             });
         }
@@ -92,14 +92,20 @@ public abstract class FEventObserver<T>
      */
     public final FEventObserver<T> setLifecycle(final Activity activity)
     {
-        new Handler(Looper.getMainLooper()).post(new Runnable()
+        if (activity == null)
         {
-            @Override
-            public void run()
+            setLifecycle((View) null);
+        } else
+        {
+            new Handler(Looper.getMainLooper()).post(new Runnable()
             {
-                setLifecycle(activity.getWindow().getDecorView());
-            }
-        });
+                @Override
+                public void run()
+                {
+                    setLifecycle(activity.getWindow().getDecorView());
+                }
+            });
+        }
         return this;
     }
 
@@ -111,14 +117,20 @@ public abstract class FEventObserver<T>
      */
     public final FEventObserver<T> setLifecycle(final Dialog dialog)
     {
-        new Handler(Looper.getMainLooper()).post(new Runnable()
+        if (dialog == null)
         {
-            @Override
-            public void run()
+            setLifecycle((View) null);
+        } else
+        {
+            new Handler(Looper.getMainLooper()).post(new Runnable()
             {
-                setLifecycle(dialog.getWindow().getDecorView());
-            }
-        });
+                @Override
+                public void run()
+                {
+                    setLifecycle(dialog.getWindow().getDecorView());
+                }
+            });
+        }
         return this;
     }
 

@@ -47,7 +47,7 @@ final class LifecycleHolder
                 view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
                 if (isAttachedToWindow(view))
                 {
-                    mCallback.onViewAttachedToWindow(view);
+                    mCallback.onStateChanged(true);
                 }
             } else
             {
@@ -61,13 +61,13 @@ final class LifecycleHolder
         @Override
         public void onViewAttachedToWindow(View v)
         {
-            mCallback.onViewAttachedToWindow(v);
+            mCallback.onStateChanged(true);
         }
 
         @Override
         public void onViewDetachedFromWindow(View v)
         {
-            mCallback.onViewDetachedFromWindow(v);
+            mCallback.onStateChanged(false);
         }
     };
 
@@ -86,8 +86,6 @@ final class LifecycleHolder
 
     public interface Callback
     {
-        void onViewAttachedToWindow(View v);
-
-        void onViewDetachedFromWindow(View v);
+        void onStateChanged(boolean enable);
     }
 }
