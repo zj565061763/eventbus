@@ -1,5 +1,6 @@
 package com.fanwe.lib.eventbus;
 
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -17,7 +18,6 @@ public class FEventBus
     private static FEventBus sInstance;
     private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new HashMap<>();
     private Handler mHandler;
-    private int mRegisterCount;
 
     private boolean mIsDebug;
 
@@ -40,9 +40,56 @@ public class FEventBus
         return sInstance;
     }
 
-    public void setDebug(boolean debug)
+    public synchronized void setDebug(boolean debug)
     {
         mIsDebug = debug;
+        startTimer(debug);
+    }
+
+    private CountDownTimer mTimer;
+
+    private void startTimer(boolean start)
+    {
+        if (start)
+        {
+            if (mTimer == null)
+            {
+                mTimer = new CountDownTimer(Long.MAX_VALUE, 10 * 1000)
+                {
+                    @Override
+                    public void onTick(long millisUntilFinished)
+                    {
+                        synchronized (FEventBus.this)
+                        {
+                            if (mIsDebug)
+                            {
+                                StringBuilder sb = new StringBuilder("register observer:\n");
+                                for (Map.Entry<Class, List<FEventObserver>> item : MAP_OBSERVER.entrySet())
+                                {
+                                    sb.append(item.getKey().getName()).append("=").append(item.getValue().toString())
+                                            .append(" ").append(item.getValue().size())
+                                            .append("\n");
+                                }
+                                Log.i(FEventBus.class.getSimpleName(), sb.toString());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFinish()
+                    {
+                    }
+                };
+                mTimer.start();
+            }
+        } else
+        {
+            if (mTimer != null)
+            {
+                mTimer.cancel();
+                mTimer = null;
+            }
+        }
     }
 
     private Handler getHandler()
@@ -117,10 +164,9 @@ public class FEventBus
         }
 
         holder.add(observer);
-        mRegisterCount++;
         if (mIsDebug)
         {
-            Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + " " + holder.size() + ") " + mRegisterCount);
+            Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + " " + holder.size() + ")");
         }
     }
 
@@ -135,10 +181,9 @@ public class FEventBus
 
         if (holder.remove(observer))
         {
-            mRegisterCount--;
             if (mIsDebug)
             {
-                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + " " + holder.size() + ") " + mRegisterCount);
+                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + " " + holder.size() + ")");
             }
         }
         if (holder.isEmpty())
