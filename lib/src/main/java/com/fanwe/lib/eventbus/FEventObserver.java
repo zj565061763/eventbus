@@ -66,8 +66,7 @@ public abstract class FEventObserver<T>
     {
         if (mLifecycleHolder == null)
         {
-            mLifecycleHolder = new LifecycleHolder();
-            mLifecycleHolder.setCallback(new LifecycleHolder.Callback()
+            mLifecycleHolder = new LifecycleHolder(new LifecycleHolder.Callback()
             {
                 @Override
                 public void onViewAttachedToWindow(View v)

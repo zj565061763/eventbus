@@ -1,5 +1,6 @@
 package com.fanwe.lib.eventbus;
 
+import android.os.Build;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -11,9 +12,13 @@ final class LifecycleHolder
 {
     private Callback mCallback;
 
-    public void setCallback(Callback callback)
+    public LifecycleHolder(Callback callback)
     {
         mCallback = callback;
+        if (callback == null)
+        {
+            throw new NullPointerException("callback is null");
+        }
     }
 
     //---------- View start ----------
@@ -38,7 +43,12 @@ final class LifecycleHolder
             if (view != null)
             {
                 mView = new WeakReference<>(view);
+
                 view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
+                if (isAttachedToWindow(view))
+                {
+                    mCallback.onViewAttachedToWindow(view);
+                }
             } else
             {
                 mView = null;
@@ -51,23 +61,28 @@ final class LifecycleHolder
         @Override
         public void onViewAttachedToWindow(View v)
         {
-            if (mCallback != null)
-            {
-                mCallback.onViewAttachedToWindow(v);
-            }
+            mCallback.onViewAttachedToWindow(v);
         }
 
         @Override
         public void onViewDetachedFromWindow(View v)
         {
-            if (mCallback != null)
-            {
-                mCallback.onViewDetachedFromWindow(v);
-            }
+            mCallback.onViewDetachedFromWindow(v);
         }
     };
 
     //---------- View end ----------
+
+    private static boolean isAttachedToWindow(View view)
+    {
+        if (Build.VERSION.SDK_INT >= 19)
+        {
+            return view.isAttachedToWindow();
+        } else
+        {
+            return view.getWindowToken() != null;
+        }
+    }
 
     public interface Callback
     {
