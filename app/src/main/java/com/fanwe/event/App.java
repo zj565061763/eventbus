@@ -15,5 +15,6 @@ public class App extends Application
     {
         super.onCreate();
         FEventBus.getDefault().setDebug(true);
+        FEventBus.getDefault().postSticky(new TestEvent());
     }
 }
