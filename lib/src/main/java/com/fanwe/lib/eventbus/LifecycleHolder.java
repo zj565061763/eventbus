@@ -33,22 +33,21 @@ final class LifecycleHolder
             setView(null);
             return;
         }
-
         Window window = activity.getWindow();
         if (window != null)
         {
             setView(window.getDecorView());
-        } else
-        {
-            new Handler(Looper.getMainLooper()).post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    setActivity(activity);
-                }
-            });
+            return;
         }
+
+        new Handler(Looper.getMainLooper()).post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                setActivity(activity);
+            }
+        });
     }
 
     public final void setDialog(final Dialog dialog)
@@ -58,22 +57,21 @@ final class LifecycleHolder
             setView(null);
             return;
         }
-
         Window window = dialog.getWindow();
         if (window != null)
         {
             setView(window.getDecorView());
-        } else
-        {
-            new Handler(Looper.getMainLooper()).post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    setDialog(dialog);
-                }
-            });
+            return;
         }
+
+        new Handler(Looper.getMainLooper()).post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                setDialog(dialog);
+            }
+        });
     }
 
     //---------- View start ----------
