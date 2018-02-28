@@ -21,7 +21,7 @@ public class App extends Application
         FEventBus.getDefault().setDebug(true);
 
         /**
-         * 发送一个粘性事件，当有对应的观察者注册的时候，会在注册的时候立即收到此事件
+         * 发送一个粘性事件，当有对应事件的观察者注册的时候，会在注册的时候立即通知此事件
          */
         FEventBus.getDefault().postSticky(new TestEvent());
 
