@@ -1,7 +1,12 @@
 package com.fanwe.lib.eventbus;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.view.Window;
 
 import java.lang.ref.WeakReference;
 
@@ -21,6 +26,56 @@ final class LifecycleHolder
         }
     }
 
+    public final void setActivity(final Activity activity)
+    {
+        if (activity == null)
+        {
+            setView(null);
+            return;
+        }
+
+        Window window = activity.getWindow();
+        if (window != null)
+        {
+            setView(window.getDecorView());
+        } else
+        {
+            new Handler(Looper.getMainLooper()).post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    setActivity(activity);
+                }
+            });
+        }
+    }
+
+    public final void setDialog(final Dialog dialog)
+    {
+        if (dialog == null)
+        {
+            setView(null);
+            return;
+        }
+
+        Window window = dialog.getWindow();
+        if (window != null)
+        {
+            setView(window.getDecorView());
+        } else
+        {
+            new Handler(Looper.getMainLooper()).post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    setDialog(dialog);
+                }
+            });
+        }
+    }
+
     //---------- View start ----------
 
     private WeakReference<View> mView;
@@ -30,7 +85,7 @@ final class LifecycleHolder
         return mView == null ? null : mView.get();
     }
 
-    public void setView(View view)
+    public final void setView(View view)
     {
         View old = getView();
         if (old != view)

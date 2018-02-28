@@ -2,8 +2,6 @@ package com.fanwe.lib.eventbus;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 
 import java.lang.reflect.ParameterizedType;
@@ -90,22 +88,9 @@ public abstract class FEventObserver<T>
      * @param activity
      * @return
      */
-    public final FEventObserver<T> setLifecycle(final Activity activity)
+    public final FEventObserver<T> setLifecycle(Activity activity)
     {
-        if (activity == null)
-        {
-            setLifecycle((View) null);
-        } else
-        {
-            new Handler(Looper.getMainLooper()).post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    setLifecycle(activity.getWindow().getDecorView());
-                }
-            });
-        }
+        getLifecycleHolder().setActivity(activity);
         return this;
     }
 
@@ -115,22 +100,9 @@ public abstract class FEventObserver<T>
      * @param dialog
      * @return
      */
-    public final FEventObserver<T> setLifecycle(final Dialog dialog)
+    public final FEventObserver<T> setLifecycle(Dialog dialog)
     {
-        if (dialog == null)
-        {
-            setLifecycle((View) null);
-        } else
-        {
-            new Handler(Looper.getMainLooper()).post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    setLifecycle(dialog.getWindow().getDecorView());
-                }
-            });
-        }
+        getLifecycleHolder().setDialog(dialog);
         return this;
     }
 

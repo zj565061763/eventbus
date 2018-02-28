@@ -54,7 +54,7 @@ public class FEventBus
         {
             if (mTimer == null)
             {
-                mTimer = new CountDownTimer(Long.MAX_VALUE, 10 * 1000)
+                mTimer = new CountDownTimer(Long.MAX_VALUE, 20 * 1000)
                 {
                     @Override
                     public void onTick(long millisUntilFinished)
