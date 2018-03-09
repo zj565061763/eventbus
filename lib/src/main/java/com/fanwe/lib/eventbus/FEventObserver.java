@@ -67,7 +67,7 @@ public abstract class FEventObserver<T>
             mLifecycleHolder = new LifecycleHolder(new LifecycleHolder.Callback()
             {
                 @Override
-                public void onStateChanged(boolean enable)
+                public void onLifecycleStateChanged(boolean enable)
                 {
                     if (enable)
                     {
