@@ -1,6 +1,5 @@
 package com.fanwe.lib.eventbus;
 
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -23,8 +22,9 @@ public class FEventBus
 
     private boolean mIsDebug;
 
-    private FEventBus()
+    public FEventBus()
     {
+        // 保持Public，支持创建新的对象
     }
 
     public static FEventBus getDefault()
@@ -42,77 +42,9 @@ public class FEventBus
         return sInstance;
     }
 
-    public synchronized void setDebug(boolean debug)
+    public void setDebug(boolean debug)
     {
         mIsDebug = debug;
-        startTimer(debug);
-    }
-
-    private CountDownTimer mTimer;
-
-    private void startTimer(boolean start)
-    {
-        if (start)
-        {
-            if (mTimer == null)
-            {
-                mTimer = new CountDownTimer(Long.MAX_VALUE, 20 * 1000)
-                {
-                    @Override
-                    public void onTick(long millisUntilFinished)
-                    {
-                        printRegisterInfo();
-                    }
-
-                    @Override
-                    public void onFinish()
-                    {
-                    }
-                };
-                mTimer.start();
-            }
-        } else
-        {
-            if (mTimer != null)
-            {
-                mTimer.cancel();
-                mTimer = null;
-            }
-        }
-    }
-
-    private synchronized void printRegisterInfo()
-    {
-        if (mIsDebug)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.append("====================");
-            sb.append("\n");
-
-            if (!MAP_OBSERVER.isEmpty())
-            {
-                sb.append("---observer:");
-                for (Map.Entry<Class, List<FEventObserver>> item : MAP_OBSERVER.entrySet())
-                {
-                    sb.append(item.getKey().getName()).append("=").append(item.getValue().toString())
-                            .append(" ").append(item.getValue().size())
-                            .append("\n");
-                }
-            }
-
-            if (!MAP_STICKY.isEmpty())
-            {
-                sb.append("---sticky:");
-                for (Map.Entry<Class, Object> item : MAP_STICKY.entrySet())
-                {
-                    sb.append(item.getValue().toString())
-                            .append("\n");
-                }
-            }
-
-            sb.append("====================");
-            Log.i(FEventBus.class.getSimpleName(), sb.toString());
-        }
     }
 
     private Handler getHandler()
@@ -215,7 +147,7 @@ public class FEventBus
         }
     }
 
-    synchronized void register(final FEventObserver observer)
+    public synchronized void register(final FEventObserver observer)
     {
         final Class clazz = observer.mEventClass;
         List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
@@ -247,7 +179,7 @@ public class FEventBus
         }
     }
 
-    synchronized void unregister(final FEventObserver observer)
+    public synchronized void unregister(final FEventObserver observer)
     {
         final Class clazz = observer.mEventClass;
         final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
