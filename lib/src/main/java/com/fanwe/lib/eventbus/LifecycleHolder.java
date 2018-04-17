@@ -33,21 +33,28 @@ final class LifecycleHolder
             setView(null);
             return;
         }
-        Window window = activity.getWindow();
+
+        final Window window = activity.getWindow();
         if (window != null)
         {
             setView(window.getDecorView());
-            return;
-        }
-
-        new Handler(Looper.getMainLooper()).post(new Runnable()
+        } else
         {
-            @Override
-            public void run()
+            new Handler(Looper.getMainLooper()).post(new Runnable()
             {
-                setActivity(activity);
-            }
-        });
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        setView(activity.getWindow().getDecorView());
+                    } catch (Exception e)
+                    {
+                        throw new RuntimeException("bind lifecycle view failed with " + activity, e);
+                    }
+                }
+            });
+        }
     }
 
     public final void setDialog(final Dialog dialog)
@@ -57,21 +64,28 @@ final class LifecycleHolder
             setView(null);
             return;
         }
-        Window window = dialog.getWindow();
+
+        final Window window = dialog.getWindow();
         if (window != null)
         {
             setView(window.getDecorView());
-            return;
-        }
-
-        new Handler(Looper.getMainLooper()).post(new Runnable()
+        } else
         {
-            @Override
-            public void run()
+            new Handler(Looper.getMainLooper()).post(new Runnable()
             {
-                setDialog(dialog);
-            }
-        });
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        setView(dialog.getWindow().getDecorView());
+                    } catch (Exception e)
+                    {
+                        throw new RuntimeException("bind lifecycle view failed with " + dialog, e);
+                    }
+                }
+            });
+        }
     }
 
     //---------- View start ----------
