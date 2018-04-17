@@ -99,13 +99,7 @@ final class LifecycleHolder
 
     public final void setView(View view)
     {
-        if (view == null)
-        {
-            // important
-            mCallback.onLifecycleStateChanged(false);
-        }
-
-        View old = getView();
+        final View old = getView();
         if (old != view)
         {
             if (old != null)
@@ -117,11 +111,18 @@ final class LifecycleHolder
             {
                 mView = new WeakReference<>(view);
                 view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
-                mCallback.onLifecycleStateChanged(isAttachedToWindow(view));
             } else
             {
                 mView = null;
             }
+        }
+
+        if (view == null)
+        {
+            mCallback.onLifecycleStateChanged(false);
+        } else
+        {
+            mCallback.onLifecycleStateChanged(isAttachedToWindow(view));
         }
     }
 
