@@ -105,6 +105,7 @@ final class LifecycleHolder
             if (old != null)
             {
                 old.removeOnAttachStateChangeListener(mOnAttachStateChangeListener);
+                mCallback.onLifecycleStateChanged(false);
             }
 
             if (view != null)
