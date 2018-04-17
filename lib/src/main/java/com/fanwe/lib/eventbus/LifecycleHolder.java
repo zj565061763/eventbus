@@ -99,6 +99,12 @@ final class LifecycleHolder
 
     public final void setView(View view)
     {
+        if (view == null)
+        {
+            // important
+            mCallback.onLifecycleStateChanged(false);
+        }
+
         View old = getView();
         if (old != view)
         {
@@ -115,7 +121,6 @@ final class LifecycleHolder
             } else
             {
                 mView = null;
-                mCallback.onLifecycleStateChanged(false);
             }
         }
     }
