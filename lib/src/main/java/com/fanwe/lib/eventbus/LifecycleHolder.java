@@ -105,21 +105,17 @@ final class LifecycleHolder
             if (old != null)
             {
                 old.removeOnAttachStateChangeListener(mOnAttachStateChangeListener);
-                mCallback.onLifecycleStateChanged(false);
             }
 
             if (view != null)
             {
                 mView = new WeakReference<>(view);
-
                 view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
-                if (isAttachedToWindow(view))
-                {
-                    mCallback.onLifecycleStateChanged(true);
-                }
+                mCallback.onLifecycleStateChanged(isAttachedToWindow(view));
             } else
             {
                 mView = null;
+                mCallback.onLifecycleStateChanged(false);
             }
         }
     }
