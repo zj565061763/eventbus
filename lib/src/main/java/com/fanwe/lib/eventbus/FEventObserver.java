@@ -16,14 +16,26 @@ public abstract class FEventObserver<T>
 
     public FEventObserver()
     {
-        final ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-        final Type[] types = parameterizedType.getActualTypeArguments();
-        if (types != null && types.length == 1)
+        Class clazz = getClass();
+        while (true)
         {
-            mEventClass = (Class<T>) types[0];
-        } else
-        {
-            throw new RuntimeException("generic type length must be 1");
+            if (clazz.getSuperclass() == FEventObserver.class)
+            {
+                final Type type = clazz.getGenericSuperclass();
+                final ParameterizedType parameterizedType = (ParameterizedType) type;
+                final Type[] types = parameterizedType.getActualTypeArguments();
+                if (types != null && types.length == 1)
+                {
+                    mEventClass = (Class<T>) types[0];
+                } else
+                {
+                    throw new RuntimeException("generic type length must be 1");
+                }
+                break;
+            } else
+            {
+                clazz = clazz.getSuperclass();
+            }
         }
     }
 
