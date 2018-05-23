@@ -6,7 +6,7 @@
 * 支持粘性事件，发送一个粘性事件，当有对应事件的观察者注册的时候，会在注册的时候立即通知此事件
 
 ## Gradle
-[![](https://jitpack.io/v/zj565061763/eventbus.svg)](https://jitpack.io/#zj565061763/eventbus)
+`implementation 'com.fanwe.android:eventbus:1.0.21'`
 
 ## 常规用法
 ```java
