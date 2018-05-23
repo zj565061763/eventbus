@@ -19,11 +19,9 @@ final class LifecycleHolder
 
     public LifecycleHolder(Callback callback)
     {
-        mCallback = callback;
         if (callback == null)
-        {
             throw new NullPointerException("callback is null");
-        }
+        mCallback = callback;
     }
 
     public final void setActivity(final Activity activity)
@@ -144,12 +142,9 @@ final class LifecycleHolder
     private static boolean isAttachedToWindow(View view)
     {
         if (Build.VERSION.SDK_INT >= 19)
-        {
             return view.isAttachedToWindow();
-        } else
-        {
+        else
             return view.getWindowToken() != null;
-        }
     }
 
     public interface Callback

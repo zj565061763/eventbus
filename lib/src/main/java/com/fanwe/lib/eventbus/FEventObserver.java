@@ -82,12 +82,9 @@ public abstract class FEventObserver<T>
                 public void onLifecycleStateChanged(boolean enable)
                 {
                     if (enable)
-                    {
                         register();
-                    } else
-                    {
+                    else
                         unregister();
-                    }
                 }
             });
         }

@@ -33,10 +33,7 @@ public class FEventBus
         {
             synchronized (FEventBus.class)
             {
-                if (sInstance == null)
-                {
-                    sInstance = new FEventBus();
-                }
+                if (sInstance == null) sInstance = new FEventBus();
             }
         }
         return sInstance;
@@ -50,9 +47,7 @@ public class FEventBus
     private Handler getHandler()
     {
         if (mHandler == null)
-        {
             mHandler = new Handler(Looper.getMainLooper());
-        }
         return mHandler;
     }
 
@@ -64,15 +59,14 @@ public class FEventBus
     public synchronized void postSticky(Object event)
     {
         if (event == null)
-        {
             return;
-        }
+
         final Class clazz = event.getClass();
         MAP_STICKY.put(clazz, event);
+
         if (mIsDebug)
-        {
             Log.i(FEventBus.class.getSimpleName(), "postSticky:" + event);
-        }
+
         post(event);
     }
 
@@ -102,20 +96,16 @@ public class FEventBus
     public synchronized void post(final Object event)
     {
         if (event == null)
-        {
             return;
-        }
+
         final Class clazz = event.getClass();
         final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
+
         if (holder == null)
-        {
             return;
-        }
 
         if (mIsDebug)
-        {
             Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
-        }
 
         int count = 0;
         for (FEventObserver item : holder)
@@ -161,26 +151,21 @@ public class FEventBus
             holder = new CopyOnWriteArrayList<>();
             MAP_OBSERVER.put(clazz, holder);
         }
+
         if (holder.contains(observer))
-        {
             return;
-        }
 
         holder.add(observer);
 
         if (mIsDebug)
-        {
             Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + " " + holder.size() + ")");
-        }
 
         final Object sticky = MAP_STICKY.get(clazz);
         if (sticky != null)
         {
             notifyObserver(observer, sticky);
             if (mIsDebug)
-            {
                 Log.i(FEventBus.class.getSimpleName(), "notify sticky when register:" + sticky);
-            }
         }
     }
 
@@ -193,21 +178,17 @@ public class FEventBus
     {
         final Class clazz = observer.mEventClass;
         final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
+
         if (holder == null)
-        {
             return;
-        }
 
         if (holder.remove(observer))
         {
             if (mIsDebug)
-            {
                 Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + " " + holder.size() + ")");
-            }
         }
+
         if (holder.isEmpty())
-        {
             MAP_OBSERVER.remove(clazz);
-        }
     }
 }
