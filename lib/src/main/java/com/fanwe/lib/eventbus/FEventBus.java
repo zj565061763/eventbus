@@ -147,6 +147,11 @@ public class FEventBus
         }
     }
 
+    /**
+     * 注册观察者
+     *
+     * @param observer
+     */
     public synchronized void register(final FEventObserver observer)
     {
         final Class clazz = observer.mEventClass;
@@ -168,7 +173,7 @@ public class FEventBus
             Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + " " + holder.size() + ")");
         }
 
-        Object sticky = MAP_STICKY.get(clazz);
+        final Object sticky = MAP_STICKY.get(clazz);
         if (sticky != null)
         {
             notifyObserver(observer, sticky);
@@ -179,6 +184,11 @@ public class FEventBus
         }
     }
 
+    /**
+     * 取消注册观察者
+     *
+     * @param observer
+     */
     public synchronized void unregister(final FEventObserver observer)
     {
         final Class clazz = observer.mEventClass;
