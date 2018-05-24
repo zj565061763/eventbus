@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 20180523
-        versionName "1.0.21"
+        versionCode 20180524
+        versionName "1.0.22"
     }
 
     buildTypes {
@@ -27,7 +27,7 @@ publish {
     groupId = 'com.fanwe.android'
 
     artifactId = 'eventbus'
-    publishVersion = '1.0.21'
+    publishVersion = '1.0.22'
     desc = 'android eventbus library'
     website = 'https://github.com/zj565061763/eventbus'
 }
