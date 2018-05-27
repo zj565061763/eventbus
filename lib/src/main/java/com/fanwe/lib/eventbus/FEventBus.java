@@ -160,7 +160,13 @@ public class FEventBus
      */
     public synchronized void register(final FEventObserver observer)
     {
+        if (observer == null)
+            return;
+
         final Class clazz = observer.mEventClass;
+        if (clazz == null)
+            throw new NullPointerException("observer's event class is null");
+
         List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
         if (holder == null)
         {
@@ -192,7 +198,13 @@ public class FEventBus
      */
     public synchronized void unregister(final FEventObserver observer)
     {
+        if (observer == null)
+            return;
+
         final Class clazz = observer.mEventClass;
+        if (clazz == null)
+            throw new NullPointerException("observer's event class is null");
+
         final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
 
         if (holder == null)
