@@ -114,32 +114,26 @@ public class FEventBus
         if (event == null)
             return;
 
-        final Class clazz = event.getClass();
-        final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
-
+        final List<FEventObserver> holder = MAP_OBSERVER.get(event.getClass());
         if (holder == null)
             return;
 
-        if (mIsDebug)
-            Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
-
-        int count = 0;
-        for (FEventObserver item : holder)
-        {
-            notifyObserver(item, event);
-            if (mIsDebug)
-            {
-                count++;
-                Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
-            }
-        }
-    }
-
-    private void notifyObserver(final FEventObserver observer, final Object event)
-    {
         if (Looper.myLooper() == Looper.getMainLooper())
         {
-            observer.onEvent(event);
+            if (mIsDebug)
+                Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
+
+            int count = 0;
+            for (FEventObserver item : holder)
+            {
+                item.onEvent(event);
+
+                if (mIsDebug)
+                {
+                    count++;
+                    Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
+                }
+            }
         } else
         {
             getHandler().post(new Runnable()
@@ -147,7 +141,7 @@ public class FEventBus
                 @Override
                 public void run()
                 {
-                    observer.onEvent(event);
+                    post(event);
                 }
             });
         }
@@ -218,5 +212,23 @@ public class FEventBus
 
         if (holder.isEmpty())
             MAP_OBSERVER.remove(clazz);
+    }
+
+    private void notifyObserver(final FEventObserver observer, final Object event)
+    {
+        if (Looper.myLooper() == Looper.getMainLooper())
+        {
+            observer.onEvent(event);
+        } else
+        {
+            getHandler().post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    observer.onEvent(event);
+                }
+            });
+        }
     }
 }
