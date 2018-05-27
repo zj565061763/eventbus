@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                FEventBus.getDefault().post(new TestEvent()); //发送事件
+                // 发送事件
+                FEventBus.getDefault().post(new TestEvent());
             }
         });
     }
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onEvent(TestEvent event)
         {
+            // 在主线程回调
             Log.i(TAG, String.valueOf(event));
         }
     }.register(); //注册观察者
@@ -46,9 +48,8 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
-        /**
-         * 取消注册观察者，否则会造成内存泄漏
-         */
+
+        // 取消注册观察者，否则会造成内存泄漏
         mEventObserver.unregister();
     }
 }
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onEvent(TestEvent event)
         {
+            // 在主线程回调
             Log.i(TAG, String.valueOf(event));
         }
     }.setLifecycle(this); //设置生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View

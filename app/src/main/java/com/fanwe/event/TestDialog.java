@@ -21,6 +21,7 @@ public class TestDialog extends Dialog
         @Override
         public void onEvent(TestEvent event)
         {
+            // 在主线程回调
             Log.i(TAG, "onEvent dialog:" + event);
         }
     }.setLifecycle(this);
