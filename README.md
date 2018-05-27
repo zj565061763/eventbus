@@ -117,4 +117,7 @@ post----->com.fanwe.event.TestEvent@8fafe20 1
 
 // 通知到第几个观察者
 notify 1 com.fanwe.event.MainActivity$2@429e1a1
+
+// 取消注册了哪个观察者，观察者对应的事件，取消注册后这种事件的观察者数量
+unregister:com.fanwe.event.MainActivity$2@429e1a1 (com.fanwe.event.TestEvent 0)
 ```
