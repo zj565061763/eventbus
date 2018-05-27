@@ -31,27 +31,27 @@ public abstract class FEventObserver<T>
 
     public FEventObserver()
     {
+        final Class clazz = findTargetClass();
+        final ParameterizedType parameterizedType = (ParameterizedType) clazz.getGenericSuperclass();
+        final Type[] types = parameterizedType.getActualTypeArguments();
+
+        if (types != null && types.length == 1)
+            mEventClass = (Class<T>) types[0];
+        else
+            throw new RuntimeException("generic type length must be 1");
+    }
+
+    private Class findTargetClass()
+    {
         Class clazz = getClass();
         while (true)
         {
             if (clazz.getSuperclass() == FEventObserver.class)
-            {
-                final Type type = clazz.getGenericSuperclass();
-                final ParameterizedType parameterizedType = (ParameterizedType) type;
-                final Type[] types = parameterizedType.getActualTypeArguments();
-                if (types != null && types.length == 1)
-                {
-                    mEventClass = (Class<T>) types[0];
-                } else
-                {
-                    throw new RuntimeException("generic type length must be 1");
-                }
                 break;
-            } else
-            {
+            else
                 clazz = clazz.getSuperclass();
-            }
         }
+        return clazz;
     }
 
     /**
