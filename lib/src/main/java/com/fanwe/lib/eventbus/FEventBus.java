@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Created by zhengjun on 2018/1/31.
- */
 public class FEventBus
 {
     private static FEventBus sInstance;

@@ -5,12 +5,8 @@
 * 支持对观察者设置生命周期对象，可以自动注册和取消注册观察者
 * 支持粘性事件，发送一个粘性事件，当有对应事件的观察者注册的时候，会在注册的时候立即通知此事件
 
-实现原理：
-1. 内部维护一个Map，Map的key是事件class，value是class对应的观察者
-2. post的时候拿到事件的class，从Map中获得观察者然后遍历通知
-
 # Gradle
-`implementation 'com.fanwe.android:eventbus:1.0.23'`
+[![](https://jitpack.io/v/zj565061763/eventbus.svg)](https://jitpack.io/#zj565061763/eventbus)
 
 # 常规用法
 ```java

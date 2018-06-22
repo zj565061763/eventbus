@@ -35,10 +35,10 @@ public abstract class FEventObserver<T>
         final ParameterizedType parameterizedType = (ParameterizedType) clazz.getGenericSuperclass();
         final Type[] types = parameterizedType.getActualTypeArguments();
 
-        if (types != null && types.length == 1)
+        if (types != null && types.length > 0)
             mEventClass = (Class<T>) types[0];
         else
-            throw new RuntimeException("generic type length must be 1");
+            throw new RuntimeException("generic type not found");
     }
 
     private Class findTargetClass()

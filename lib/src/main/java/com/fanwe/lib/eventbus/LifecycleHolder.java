@@ -25,9 +25,6 @@ import android.view.Window;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Created by zhengjun on 2018/2/26.
- */
 final class LifecycleHolder
 {
     private Callback mCallback;
@@ -36,6 +33,7 @@ final class LifecycleHolder
     {
         if (callback == null)
             throw new NullPointerException("callback is null");
+
         mCallback = callback;
     }
 
@@ -116,28 +114,23 @@ final class LifecycleHolder
         if (old != view)
         {
             if (old != null)
-            {
                 old.removeOnAttachStateChangeListener(mOnAttachStateChangeListener);
-            }
+
+            mView = view == null ? null : new WeakReference<>(view);
 
             if (view != null)
             {
-                mView = new WeakReference<>(view);
                 view.addOnAttachStateChangeListener(mOnAttachStateChangeListener);
-
                 if (isAttachedToWindow(view))
-                {
                     mCallback.onLifecycleStateChanged(true);
-                }
             } else
             {
-                mView = null;
                 mCallback.onLifecycleStateChanged(false);
             }
         }
     }
 
-    private View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()
+    private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener()
     {
         @Override
         public void onViewAttachedToWindow(View v)
