@@ -1,10 +1,10 @@
-package com.fanwe.event;
+package com.sd.event;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 
-import com.fanwe.lib.eventbus.FEventObserver;
+import com.sd.lib.eventbus.FEventObserver;
 
 public class TestDialog extends Dialog
 {

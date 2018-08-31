@@ -1,12 +1,12 @@
-package com.fanwe.event;
+package com.sd.event;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.fanwe.lib.eventbus.FEventBus;
-import com.fanwe.lib.eventbus.FEventObserver;
+import com.sd.lib.eventbus.FEventBus;
+import com.sd.lib.eventbus.FEventObserver;
 
 public class MainActivity extends AppCompatActivity
 {

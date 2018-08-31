@@ -1,4 +1,4 @@
-package com.fanwe.event;
+package com.sd.event;
 
 /**
  * Created by Administrator on 2018/2/26.

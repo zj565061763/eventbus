@@ -1,8 +1,8 @@
-package com.fanwe.event;
+package com.sd.event;
 
 import android.app.Application;
 
-import com.fanwe.lib.eventbus.FEventBus;
+import com.sd.lib.eventbus.FEventBus;
 
 public class App extends Application
 {
