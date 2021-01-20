@@ -2,7 +2,7 @@
 一个简单版本的EventBus<br>
 * 支持单独对某个事件观察者的注册和取消注册
 * post的时候直接拿到观察者对象进行通知，而非反射，效率比较高
-* 支持对观察者设置生命周期对象，可以自动注册和取消注册观察者
+* 支持给观察者绑定生命周期对象，可以自动注册和取消注册观察者
 * 支持粘性事件，发送一个粘性事件，当有对应事件的观察者注册的时候，会在注册的时候立即通知此事件
 
 # Gradle
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
 
 # 绑定生命周期
 
-设置生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View<br>
+绑定生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View<br>
 底层的实现方案：View在Attached的时候注册观察者，View在Detached的时候取消注册观察者 <br>
 
 Activity 绑定的View对象 -> Activity.getWindow().getDecorView() <br>
