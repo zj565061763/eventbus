@@ -128,9 +128,9 @@ public abstract class FEventObserver<T>
     /**
      * 绑定生命周期对象
      * <br>
-     * 当View对象Attached的时候会注册当前观察者
+     * 当View对象Attached的时候会注册当前对象
      * <br>
-     * 当View对象Detached的时候会取消注册当前观察者
+     * 当View对象Detached的时候会取消注册当前对象
      *
      * @param view
      * @return true-绑定成功；false-绑定失败
