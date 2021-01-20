@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 事件观察者
      */
-    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
+    private final FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
     {
         @Override
         public void onEvent(TestEvent event)
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 事件观察者
      */
-    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
+    private final FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
     {
         @Override
         public void onEvent(TestEvent event)
