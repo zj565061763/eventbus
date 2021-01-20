@@ -26,9 +26,9 @@ public abstract class FEventObserver<T>
             throw new RuntimeException("generic type not found");
     }
 
-    private Class findTargetClass()
+    private Class<?> findTargetClass()
     {
-        Class clazz = getClass();
+        Class<?> clazz = getClass();
         while (true)
         {
             if (clazz.getSuperclass() == FEventObserver.class)
