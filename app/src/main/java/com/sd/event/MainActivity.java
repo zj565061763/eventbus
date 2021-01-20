@@ -1,9 +1,10 @@
 package com.sd.event;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.sd.lib.eventbus.FEventBus;
 import com.sd.lib.eventbus.FEventObserver;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 事件观察者
      */
-    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
+    private final FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
     {
         @Override
         public void onEvent(TestEvent event)
