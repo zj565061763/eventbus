@@ -97,19 +97,28 @@ public abstract class FEventObserver<T>
      * @param activity
      * @return
      */
-    public final void bindLifecycle(Activity activity)
+    public final boolean bindLifecycle(Activity activity)
     {
+        if (activity == null)
+            return false;
+
         getLifecycleHolder().setActivity(activity);
+        return true;
     }
 
     /**
      * {@link #bindLifecycle(View)}
      *
      * @param dialog
+     * @return
      */
-    public final void bindLifecycle(Dialog dialog)
+    public final boolean bindLifecycle(Dialog dialog)
     {
+        if (dialog == null)
+            return false;
+
         getLifecycleHolder().setDialog(dialog);
+        return true;
     }
 
     /**
@@ -119,11 +128,15 @@ public abstract class FEventObserver<T>
      * 当该View对象Detached的时候会取消注册当前观察者对象
      *
      * @param view
-     * @return
+     * @return true-绑定成功；false-绑定失败
      */
-    public final void bindLifecycle(View view)
+    public final boolean bindLifecycle(View view)
     {
+        if (view == null)
+            return false;
+
         getLifecycleHolder().setView(view);
+        return true;
     }
 
     @Deprecated
