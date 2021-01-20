@@ -1,21 +1,17 @@
 package com.sd.lib.eventbus;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FEventBus
 {
     private static FEventBus sInstance;
-    private final Map<Class, List<FEventObserver>> MAP_OBSERVER = new LinkedHashMap<>();
-    private final Map<Class, Object> MAP_STICKY = new HashMap<>();
-    private Handler mHandler;
+
+    private final Map<Class<?>, Map<FEventObserver, String>> mObserverHolder = new HashMap<>();
+    private final Map<Class<?>, Object> mStickyHolder = new HashMap<>();
 
     private boolean mIsDebug;
 
@@ -42,93 +38,6 @@ public class FEventBus
         mIsDebug = debug;
     }
 
-    private Handler getHandler()
-    {
-        if (mHandler == null)
-            mHandler = new Handler(Looper.getMainLooper());
-        return mHandler;
-    }
-
-    /**
-     * 发送粘性事件
-     *
-     * @param event
-     */
-    public synchronized void postSticky(Object event)
-    {
-        if (event == null)
-            return;
-
-        final Class clazz = event.getClass();
-        MAP_STICKY.put(clazz, event);
-
-        if (mIsDebug)
-            Log.i(FEventBus.class.getSimpleName(), "postSticky:" + event);
-
-        post(event);
-    }
-
-    /**
-     * 移除某个粘性事件
-     *
-     * @param clazz
-     */
-    public synchronized void removeSticky(Class clazz)
-    {
-        MAP_STICKY.remove(clazz);
-    }
-
-    /**
-     * 移除所有粘性事件
-     */
-    public synchronized void removeAllSticky()
-    {
-        MAP_STICKY.clear();
-    }
-
-    /**
-     * 发送事件
-     *
-     * @param event
-     */
-    public synchronized void post(final Object event)
-    {
-        if (event == null)
-            return;
-
-        final List<FEventObserver> holder = MAP_OBSERVER.get(event.getClass());
-        if (holder == null)
-            return;
-
-        if (Looper.myLooper() == Looper.getMainLooper())
-        {
-            if (mIsDebug)
-                Log.i(FEventBus.class.getSimpleName(), "post----->" + event + " " + holder.size());
-
-            int count = 0;
-            for (FEventObserver item : holder)
-            {
-                item.onEvent(event);
-
-                if (mIsDebug)
-                {
-                    count++;
-                    Log.i(FEventBus.class.getSimpleName(), "notify " + count + " " + item);
-                }
-            }
-        } else
-        {
-            getHandler().post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    post(event);
-                }
-            });
-        }
-    }
-
     /**
      * 注册观察者
      *
@@ -139,31 +48,41 @@ public class FEventBus
         if (observer == null)
             return;
 
-        final Class clazz = observer.mEventClass;
+        final Class<?> clazz = observer.mEventClass;
         if (clazz == null)
             throw new NullPointerException("observer's event class is null");
 
-        List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
+        Map<FEventObserver, String> holder = mObserverHolder.get(clazz);
         if (holder == null)
         {
-            holder = new CopyOnWriteArrayList<>();
-            MAP_OBSERVER.put(clazz, holder);
+            holder = new ConcurrentHashMap<>();
+            mObserverHolder.put(clazz, holder);
         }
 
-        if (holder.contains(observer))
-            return;
-
-        holder.add(observer);
-
-        if (mIsDebug)
-            Log.i(FEventBus.class.getSimpleName(), "register:" + observer + " (" + clazz.getName() + " " + holder.size() + ")");
-
-        final Object sticky = MAP_STICKY.get(clazz);
-        if (sticky != null)
+        final String put = holder.put(observer, "");
+        if (put == null)
         {
-            notifyObserver(observer, sticky);
             if (mIsDebug)
-                Log.i(FEventBus.class.getSimpleName(), "notify sticky when register:" + sticky);
+            {
+                Log.i(FEventBus.class.getSimpleName(), "register +++++"
+                        + " class:" + clazz.getName()
+                        + " observer:" + observer
+                        + " size:" + holder.size()
+                        + " sizeTotal:" + mObserverHolder.size());
+            }
+
+            final Object sticky = mStickyHolder.get(clazz);
+            if (sticky != null)
+            {
+                if (mIsDebug)
+                {
+                    Log.i(FEventBus.class.getSimpleName(), "notify sticky when register"
+                            + " observer:" + observer
+                            + " sticky:" + sticky);
+                }
+
+                notifyObserver(observer, sticky);
+            }
         }
     }
 
@@ -177,40 +96,129 @@ public class FEventBus
         if (observer == null)
             return;
 
-        final Class clazz = observer.mEventClass;
+        final Class<?> clazz = observer.mEventClass;
         if (clazz == null)
             throw new NullPointerException("observer's event class is null");
 
-        final List<FEventObserver> holder = MAP_OBSERVER.get(clazz);
-
+        final Map<FEventObserver, String> holder = mObserverHolder.get(clazz);
         if (holder == null)
             return;
 
-        if (holder.remove(observer))
+        final String remove = holder.remove(observer);
+        if (remove != null)
         {
-            if (mIsDebug)
-                Log.e(FEventBus.class.getSimpleName(), "unregister:" + observer + " (" + clazz.getName() + " " + holder.size() + ")");
-        }
+            if (holder.isEmpty())
+                mObserverHolder.remove(clazz);
 
-        if (holder.isEmpty())
-            MAP_OBSERVER.remove(clazz);
+            if (mIsDebug)
+            {
+                Log.i(FEventBus.class.getSimpleName(), "unregister -----"
+                        + " class:" + clazz.getName()
+                        + " observer:" + observer
+                        + " size:" + holder.size()
+                        + " sizeTotal:" + mObserverHolder.size());
+            }
+        }
     }
 
+    /**
+     * 发送事件
+     *
+     * @param event
+     */
+    public synchronized void post(final Object event)
+    {
+        if (event == null)
+            return;
+
+        final Class<?> clazz = event.getClass();
+        final Map<FEventObserver, String> holder = mObserverHolder.get(clazz);
+        if (holder == null)
+            return;
+
+        if (holder.isEmpty())
+        {
+            mObserverHolder.remove(clazz);
+            return;
+        }
+
+        if (mIsDebug)
+        {
+            Log.i(FEventBus.class.getSimpleName(), "post----->"
+                    + " event:" + event
+                    + " size:" + holder.size());
+        }
+
+        for (FEventObserver item : holder.keySet())
+        {
+            notifyObserver(item, event);
+        }
+    }
+
+    //---------- sticky ----------
+
+    /**
+     * 发送粘性事件
+     *
+     * @param event
+     */
+    public synchronized void postSticky(Object event)
+    {
+        if (event == null)
+            return;
+
+        final Class<?> clazz = event.getClass();
+        mStickyHolder.put(clazz, event);
+
+        if (mIsDebug)
+            Log.i(FEventBus.class.getSimpleName(), "postSticky:" + event);
+
+        post(event);
+    }
+
+    /**
+     * 移除某个粘性事件
+     *
+     * @param clazz
+     */
+    public synchronized void removeSticky(Class<?> clazz)
+    {
+        if (clazz == null)
+            return;
+
+        mStickyHolder.remove(clazz);
+    }
+
+    /**
+     * 移除所有粘性事件
+     */
+    public synchronized void removeAllSticky()
+    {
+        mStickyHolder.clear();
+    }
+
+    /**
+     * 通知观察者
+     *
+     * @param observer
+     * @param event
+     */
     private void notifyObserver(final FEventObserver observer, final Object event)
     {
-        if (Looper.myLooper() == Looper.getMainLooper())
+        Utils.runOnMainThread(new Runnable()
         {
-            observer.onEvent(event);
-        } else
-        {
-            getHandler().post(new Runnable()
+            @Override
+            public void run()
             {
-                @Override
-                public void run()
+                if (mIsDebug)
                 {
-                    observer.onEvent(event);
+                    Log.i(FEventBus.class.getSimpleName(), "notifyObserver"
+                            + " event:" + event
+                            + " observer:" + observer);
                 }
-            });
-        }
+
+                observer.onEvent(event);
+            }
+        });
     }
 }

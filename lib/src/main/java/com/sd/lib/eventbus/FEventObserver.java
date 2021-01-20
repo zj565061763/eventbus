@@ -16,7 +16,7 @@ public abstract class FEventObserver<T>
 
     public FEventObserver()
     {
-        final Class clazz = findTargetClass();
+        final Class<?> clazz = findTargetClass();
         final ParameterizedType parameterizedType = (ParameterizedType) clazz.getGenericSuperclass();
         final Type[] types = parameterizedType.getActualTypeArguments();
 
