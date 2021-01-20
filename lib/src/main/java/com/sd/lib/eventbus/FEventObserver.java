@@ -2,6 +2,7 @@ package com.sd.lib.eventbus;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.view.View;
 
 import java.lang.reflect.ParameterizedType;
@@ -139,6 +140,14 @@ public abstract class FEventObserver<T>
     {
         if (view == null)
             return false;
+
+        final Context context = view.getContext();
+        if (context instanceof Activity)
+        {
+            final Activity activity = (Activity) context;
+            if (activity.isFinishing())
+                return false;
+        }
 
         getLifecycleHolder().setView(view);
         return true;
