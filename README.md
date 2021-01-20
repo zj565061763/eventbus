@@ -106,18 +106,4 @@ public class MainActivity extends AppCompatActivity
 // 设置调试模式
 FEventBus.getDefault().setDebug(true);
 ```
-
-设置调试模式后，会有类似如下日志输出，日志过滤log：FEventBus
-```java
-// 注册了哪个观察者，观察者对应的事件，注册后这种事件的观察者数量
-register:com.sd.event.MainActivity$2@429e1a1 (com.sd.event.TestEvent 1)
-
-// post了一个事件，此次post需要通知的观察者数量
-post----->com.sd.event.TestEvent@8fafe20 1
-
-// 通知到第几个观察者
-notify 1 com.sd.event.MainActivity$2@429e1a1
-
-// 取消注册了哪个观察者，观察者对应的事件，取消注册后这种事件的观察者数量
-unregister:com.sd.event.MainActivity$2@429e1a1 (com.sd.event.TestEvent 0)
-```
+设置调试模式后，会有操作日志输出，例如注册，取消注册，发送事件等日志，日志过滤log：FEventBus
