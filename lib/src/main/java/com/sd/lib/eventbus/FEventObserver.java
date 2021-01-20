@@ -92,6 +92,8 @@ public abstract class FEventObserver<T>
     }
 
     /**
+     * 生命周期对象：Activity.getWindow().getDecorView()
+     * <br>
      * {@link #bindLifecycle(View)}
      *
      * @param activity
@@ -99,7 +101,7 @@ public abstract class FEventObserver<T>
      */
     public final boolean bindLifecycle(Activity activity)
     {
-        if (activity == null)
+        if (activity == null || activity.isFinishing())
             return false;
 
         getLifecycleHolder().setActivity(activity);
@@ -107,6 +109,8 @@ public abstract class FEventObserver<T>
     }
 
     /**
+     * 生命周期对象：Dialog.getWindow().getDecorView()
+     * <br>
      * {@link #bindLifecycle(View)}
      *
      * @param dialog
@@ -124,8 +128,9 @@ public abstract class FEventObserver<T>
     /**
      * 绑定生命周期对象
      * <br>
-     * 当该View对象Attached的时候会注册当前观察者对象
-     * 当该View对象Detached的时候会取消注册当前观察者对象
+     * 当View对象Attached的时候会注册当前观察者
+     * <br>
+     * 当View对象Detached的时候会取消注册当前观察者
      *
      * @param view
      * @return true-绑定成功；false-绑定失败
@@ -138,6 +143,16 @@ public abstract class FEventObserver<T>
         getLifecycleHolder().setView(view);
         return true;
     }
+
+    /**
+     * 如果已经绑定生命周期，则解除生命周期绑定并取消注册
+     */
+    public final void unbindLifecycle()
+    {
+        getLifecycleHolder().setView(null);
+    }
+
+    //---------- Lifecycle end ----------
 
     @Deprecated
     public final FEventObserver<T> setLifecycle(Activity activity)
@@ -159,6 +174,4 @@ public abstract class FEventObserver<T>
         getLifecycleHolder().setView(view);
         return this;
     }
-
-    //---------- Lifecycle end ----------
 }
