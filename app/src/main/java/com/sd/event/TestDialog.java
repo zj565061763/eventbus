@@ -16,7 +16,7 @@ public class TestDialog extends Dialog
         setContentView(R.layout.dialog_test);
     }
 
-    private FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
+    private final FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
     {
         @Override
         public void onEvent(TestEvent event)

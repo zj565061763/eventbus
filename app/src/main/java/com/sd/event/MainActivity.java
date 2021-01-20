@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
         public void onEvent(TestEvent event)
         {
             // 在主线程回调
-            Log.i(TAG, String.valueOf(event));
+            Log.i(TAG, "onEvent activity:" + event);
         }
     }.setLifecycle(this); //设置生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
 }
