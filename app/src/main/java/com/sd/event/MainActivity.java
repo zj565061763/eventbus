@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.btn_post).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity
                 FEventBus.getDefault().post(new TestEvent());
             }
         });
+
+        new TestDialog(this).show();
     }
 
     /**
