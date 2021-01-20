@@ -10,6 +10,7 @@ public class App extends Application
     public void onCreate()
     {
         super.onCreate();
+        // 设置调试模式，输入日志
         FEventBus.getDefault().setDebug(true);
     }
 }

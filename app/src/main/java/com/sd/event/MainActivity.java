@@ -19,9 +19,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 设置调试模式
-        FEventBus.getDefault().setDebug(true);
-
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener()
         {
             @Override
