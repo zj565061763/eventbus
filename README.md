@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -29,6 +28,9 @@ public class MainActivity extends AppCompatActivity
                 FEventBus.getDefault().post(new TestEvent());
             }
         });
+
+        // 注册观察者
+        mEventObserver.register();
     }
 
     /**
@@ -40,9 +42,9 @@ public class MainActivity extends AppCompatActivity
         public void onEvent(TestEvent event)
         {
             // 在主线程回调
-            Log.i(TAG, String.valueOf(event));
+            Log.i(TAG, "onEvent activity:" + event);
         }
-    }.register(); //注册观察者
+    };
 
     @Override
     protected void onDestroy()
@@ -74,16 +76,18 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener()
+        findViewById(R.id.btn_post).setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                //发送事件
+                // 发送事件
                 FEventBus.getDefault().post(new TestEvent());
             }
         });
+
+        // 绑定生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
+        mEventObserver.bindLifecycle(this);
     }
 
     /**
@@ -95,9 +99,9 @@ public class MainActivity extends AppCompatActivity
         public void onEvent(TestEvent event)
         {
             // 在主线程回调
-            Log.i(TAG, String.valueOf(event));
+            Log.i(TAG, "onEvent activity:" + event);
         }
-    }.setLifecycle(this); //设置生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
+    };
 }
 ```
 
