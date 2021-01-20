@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        new TestDialog(this).show();
+        // 绑定生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
+        mEventObserver.bindLifecycle(this);
     }
 
     /**
@@ -43,5 +44,5 @@ public class MainActivity extends AppCompatActivity
             // 在主线程回调
             Log.i(TAG, "onEvent activity:" + event);
         }
-    }.setLifecycle(this); //设置生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
+    };
 }
