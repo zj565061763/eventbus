@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity
 
         // 绑定生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
         mEventObserver.bindLifecycle(this);
+
+        new TestDialog(this).show();
     }
 
     /**

@@ -25,6 +25,8 @@ public class TestDialog extends Dialog
                 FEventBus.getDefault().post(new TestEvent());
             }
         });
+
+        mEventObserver.bindLifecycle(this);
     }
 
     private final FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
@@ -35,5 +37,5 @@ public class TestDialog extends Dialog
             // 在主线程回调
             Log.i(TAG, "onEvent dialog:" + event);
         }
-    }.setLifecycle(this);
+    };
 }
