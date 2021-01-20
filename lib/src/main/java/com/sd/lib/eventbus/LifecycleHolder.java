@@ -30,7 +30,7 @@ final class LifecycleHolder
             return;
         }
 
-        final Window window = activity.getWindow();
+        Window window = activity.getWindow();
         if (window != null)
         {
             setView(window.getDecorView());
@@ -41,12 +41,13 @@ final class LifecycleHolder
                 @Override
                 public void run()
                 {
-                    try
+                    final Window delayWindow = activity.getWindow();
+                    if (delayWindow != null)
                     {
-                        setView(activity.getWindow().getDecorView());
-                    } catch (Exception e)
+                        setView(delayWindow.getDecorView());
+                    } else
                     {
-                        throw new RuntimeException("bind lifecycle view failed with " + activity, e);
+                        throw new RuntimeException("bind lifecycle view failed with " + activity);
                     }
                 }
             });
@@ -61,7 +62,7 @@ final class LifecycleHolder
             return;
         }
 
-        final Window window = dialog.getWindow();
+        Window window = dialog.getWindow();
         if (window != null)
         {
             setView(window.getDecorView());
@@ -72,12 +73,13 @@ final class LifecycleHolder
                 @Override
                 public void run()
                 {
-                    try
+                    final Window delayWindow = dialog.getWindow();
+                    if (delayWindow != null)
                     {
-                        setView(dialog.getWindow().getDecorView());
-                    } catch (Exception e)
+                        setView(delayWindow.getDecorView());
+                    } else
                     {
-                        throw new RuntimeException("bind lifecycle view failed with " + dialog, e);
+                        throw new RuntimeException("bind lifecycle view failed with " + dialog);
                     }
                 }
             });
