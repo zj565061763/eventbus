@@ -24,7 +24,6 @@ class TestDialog(context: Context) : Dialog(context) {
     init {
         setContentView(R.layout.dialog_test)
         findViewById<View>(R.id.btn_post).setOnClickListener {
-            // 发送事件
             FEventBus.post(TestEvent())
         }
     }
