@@ -30,11 +30,11 @@ abstract class FEventObserver<T> {
     }
 
     fun register() {
-        FEventBus.default.register(this)
+        FEventBus.register(this)
     }
 
     fun unregister() {
-        FEventBus.default.unregister(this)
+        FEventBus.unregister(this)
     }
 
     fun bindActivity(activity: Activity) {
