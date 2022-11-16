@@ -131,7 +131,7 @@ public class FEventBus {
      * @param event
      */
     private void notifyObserver(final FEventObserver observer, final Object event) {
-        Utils.runOnMainThread(new Runnable() {
+        Utils.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mIsDebug) {
