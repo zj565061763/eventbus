@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private val _eventObserver = object : FEventObserver<TestEvent>() {
         override fun onEvent(event: TestEvent) {
-            logMsg { "onEvent activity:$event" }
+            logMsg { "onEvent activity $event" }
         }
     }
 

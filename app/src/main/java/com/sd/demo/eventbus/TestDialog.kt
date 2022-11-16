@@ -21,7 +21,7 @@ class TestDialog(context: Context) : Dialog(context) {
 
     private val _eventObserver = object : FEventObserver<TestEvent>() {
         override fun onEvent(event: TestEvent) {
-            logMsg { "onEvent dialog:$event" }
+            logMsg { "onEvent dialog $event" }
         }
     }
 
