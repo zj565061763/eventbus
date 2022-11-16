@@ -1,15 +1,19 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
 
-group = 'com.github.zj565061763'
+def libGroupId = "com.sd.lib.android"
+def libArtifactId = "eventbus"
+def libVersionName = "1.2.0-beta01"
 
 android {
-    compileSdkVersion 28
+    namespace 'com.sd.lib.eventbus'
+    compileSdk 33
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 28
-        versionCode 20210120
-        versionName "1.1.1"
+        minSdk 21
+        targetSdk 33
     }
 
     buildTypes {
@@ -18,39 +22,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+        kotlinOptions.freeCompilerArgs += ['-module-name', "$libGroupId.$libArtifactId"]
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
 dependencies {
 }
 
-tasks.withType(Javadoc) {
-    options {
-        encoding 'UTF-8'
-        charSet 'UTF-8'
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = libGroupId
+                artifactId = libArtifactId
+                version = libVersionName
+
+                // 上传源码
+                artifact generateSourcesJar
+            }
+        }
     }
-}
-
-task sourcesJar(type: Jar) {
-    getArchiveClassifier().set('sources')
-    from android.sourceSets.main.java.sourceFiles
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.sourceFiles
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    getArchiveClassifier().set('javadoc')
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
 }

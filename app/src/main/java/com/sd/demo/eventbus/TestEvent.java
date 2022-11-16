@@ -1,4 +1,4 @@
-package com.sd.event;
+package com.sd.demo.eventbus;
 
 /**
  * Created by Administrator on 2018/2/26.

@@ -1,4 +1,4 @@
-package com.sd.event;
+package com.sd.demo.eventbus;
 
 import android.app.Application;
 

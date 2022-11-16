@@ -1,21 +1,24 @@
-package com.sd.event;
+package com.sd.demo.eventbus;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.sd.lib.eventbus.FEventBus;
 import com.sd.lib.eventbus.FEventObserver;
 
-public class TestDialog extends Dialog
+public class MainActivity extends AppCompatActivity
 {
-    public static final String TAG = TestDialog.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
 
-    public TestDialog(Context context)
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
     {
-        super(context);
-        setContentView(R.layout.dialog_test);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
         findViewById(R.id.btn_post).setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -26,16 +29,22 @@ public class TestDialog extends Dialog
             }
         });
 
+        // 绑定生命周期对象(会自动注册和取消注册观察者)，支持Activity，Dialog，View
         mEventObserver.bindLifecycle(this);
+
+        new TestDialog(this).show();
     }
 
+    /**
+     * 事件观察者
+     */
     private final FEventObserver<TestEvent> mEventObserver = new FEventObserver<TestEvent>()
     {
         @Override
         public void onEvent(TestEvent event)
         {
             // 在主线程回调
-            Log.i(TAG, "onEvent dialog:" + event);
+            Log.i(TAG, "onEvent activity:" + event);
         }
     };
 }
