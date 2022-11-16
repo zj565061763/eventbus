@@ -1,5 +1,7 @@
 package com.sd.lib.eventbus
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import java.util.concurrent.ConcurrentHashMap
 
@@ -11,9 +13,6 @@ object FEventBus {
     @JvmStatic
     val default = FEventBus
 
-    /**
-     * 注册观察者
-     */
     @Synchronized
     fun register(observer: FEventObserver<*>) {
         val clazz = observer.eventClass
@@ -27,9 +26,6 @@ object FEventBus {
         }
     }
 
-    /**
-     * 取消注册观察者
-     */
     @Synchronized
     fun unregister(observer: FEventObserver<*>) {
         val clazz = observer.eventClass
@@ -41,9 +37,7 @@ object FEventBus {
             logMsg { "----- ${clazz.name} (${holder.size}) ($observer) eventTypeSize:${_observerHolder.size}" }
         }
     }
-    /**
-     * 发送事件
-     */
+
     @Synchronized
     fun post(event: Any) {
         val clazz = event.javaClass
@@ -61,19 +55,24 @@ object FEventBus {
         }
     }
 
-    /**
-     * 通知观察者
-     */
     private fun notifyObserver(observer: FEventObserver<Any>, event: Any) {
-        Utils.runOnUiThread {
+        runOnUiThread {
             logMsg { "notify $event $observer" }
             observer.onEvent(event)
         }
     }
 }
 
-internal inline fun logMsg(block: () -> String) {
+private inline fun logMsg(block: () -> String) {
     if (FEventBus.isDebug) {
         Log.i("FEventBus", block())
+    }
+}
+
+private fun runOnUiThread(runnable: Runnable) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+        runnable.run()
+    } else {
+        Handler(Looper.getMainLooper()).post { runnable.run() }
     }
 }
