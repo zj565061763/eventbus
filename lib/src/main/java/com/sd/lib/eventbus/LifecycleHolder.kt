@@ -62,17 +62,20 @@ internal abstract class LifecycleHolder {
             _enable = false
             return
         }
-
         _enable = currentView?.isAttachedToWindow ?: false
     }
 
     private val _onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
         override fun onViewAttachedToWindow(v: View) {
-            checkEnableState()
+            if (currentView === v) {
+                _enable = true
+            }
         }
 
         override fun onViewDetachedFromWindow(v: View) {
-            checkEnableState()
+            if (currentView === v) {
+                _enable = false
+            }
         }
     }
 
