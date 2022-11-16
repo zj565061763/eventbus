@@ -20,12 +20,8 @@ internal abstract class LifecycleHolder {
         }
 
     fun setActivity(activity: Activity?) {
-        if (activity == null) {
+        if (activity == null || activity.isFinishing) {
             setView(null)
-            return
-        }
-
-        if (activity.isFinishing) {
             return
         }
 
@@ -41,6 +37,7 @@ internal abstract class LifecycleHolder {
 
         val context = dialog.context
         if (context is Activity && context.isFinishing) {
+            setView(null)
             return
         }
 
@@ -50,22 +47,24 @@ internal abstract class LifecycleHolder {
 
     fun setView(view: View?) {
         val oldView = currentView
-        if (oldView != view) {
+        if (oldView == view) return
 
-            val context = view?.context
-            if (context is Activity && context.isFinishing) {
-                return
-            }
+        oldView?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
+        _viewRef = if (view == null) null else WeakReference(view)
+        view?.addOnAttachStateChangeListener(_onAttachStateChangeListener)
 
-            oldView?.removeOnAttachStateChangeListener(_onAttachStateChangeListener)
-            _viewRef = if (view == null) null else WeakReference(view)
-            view?.addOnAttachStateChangeListener(_onAttachStateChangeListener)
-            checkEnableState()
-        }
+        checkEnableState()
     }
 
     private fun checkEnableState() {
-        _enable = currentView?.isAttachedToWindow ?: false
+        val view = currentView
+        val context = view?.context
+        if (context is Activity && context.isFinishing) {
+            _enable = false
+            return
+        }
+
+        _enable = view?.isAttachedToWindow ?: false
     }
 
     private val _onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
