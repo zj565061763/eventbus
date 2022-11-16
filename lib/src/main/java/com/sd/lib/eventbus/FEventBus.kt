@@ -67,13 +67,7 @@ object FEventBus {
      */
     private fun notifyObserver(observer: FEventObserver<Any>, event: Any) {
         runOnUiThread {
-            if (isDebug) {
-                Log.i(
-                    FEventBus::class.java.simpleName, "notifyObserver"
-                            + " event:" + event
-                            + " observer:" + observer
-                )
-            }
+            logMsg { "notify $event $observer" }
             observer.onEvent(event)
         }
     }
