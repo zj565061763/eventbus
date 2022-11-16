@@ -57,14 +57,13 @@ internal abstract class LifecycleHolder {
     }
 
     private fun checkEnableState() {
-        val view = currentView
-        val context = view?.context
+        val context = currentView?.context
         if (context is Activity && context.isFinishing) {
             _enable = false
             return
         }
 
-        _enable = view?.isAttachedToWindow ?: false
+        _enable = currentView?.isAttachedToWindow ?: false
     }
 
     private val _onAttachStateChangeListener = object : View.OnAttachStateChangeListener {
