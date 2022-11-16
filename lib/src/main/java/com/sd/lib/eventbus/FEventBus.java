@@ -37,12 +37,14 @@ public class FEventBus {
      * @param observer
      */
     public synchronized void register(final FEventObserver observer) {
-        if (observer == null)
+        if (observer == null) {
             return;
+        }
 
         final Class<?> clazz = observer.mEventClass;
-        if (clazz == null)
+        if (clazz == null) {
             throw new NullPointerException("observer's event class is null");
+        }
 
         Map<FEventObserver, String> holder = mObserverHolder.get(clazz);
         if (holder == null) {
@@ -68,21 +70,25 @@ public class FEventBus {
      * @param observer
      */
     public synchronized void unregister(final FEventObserver observer) {
-        if (observer == null)
+        if (observer == null) {
             return;
+        }
 
         final Class<?> clazz = observer.mEventClass;
-        if (clazz == null)
+        if (clazz == null) {
             throw new NullPointerException("observer's event class is null");
+        }
 
         final Map<FEventObserver, String> holder = mObserverHolder.get(clazz);
-        if (holder == null)
+        if (holder == null) {
             return;
+        }
 
         final String remove = holder.remove(observer);
         if (remove != null) {
-            if (holder.isEmpty())
+            if (holder.isEmpty()) {
                 mObserverHolder.remove(clazz);
+            }
 
             if (mIsDebug) {
                 Log.i(FEventBus.class.getSimpleName(), "unregister -----"
@@ -100,13 +106,15 @@ public class FEventBus {
      * @param event
      */
     public synchronized void post(final Object event) {
-        if (event == null)
+        if (event == null) {
             return;
+        }
 
         final Class<?> clazz = event.getClass();
         final Map<FEventObserver, String> holder = mObserverHolder.get(clazz);
-        if (holder == null)
+        if (holder == null) {
             return;
+        }
 
         if (holder.isEmpty()) {
             mObserverHolder.remove(clazz);
