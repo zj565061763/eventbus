@@ -37,15 +37,15 @@ abstract class FEventObserver<T> {
         FEventBus.default.unregister(this)
     }
 
-    fun bindActivity(activity: Activity?) {
+    fun bindActivity(activity: Activity) {
         _lifecycleHolder.setActivity(activity)
     }
 
-    fun bindDialog(dialog: Dialog?) {
+    fun bindDialog(dialog: Dialog) {
         _lifecycleHolder.setDialog(dialog)
     }
 
-    fun bindView(view: View?) {
+    fun bindView(view: View) {
         _lifecycleHolder.setView(view)
     }
 

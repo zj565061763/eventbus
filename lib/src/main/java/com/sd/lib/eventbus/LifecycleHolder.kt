@@ -9,7 +9,13 @@ internal abstract class LifecycleHolder {
     private var _viewRef: WeakReference<View>? = null
 
     private val currentView: View?
-        get() = _viewRef?.get()
+        get() {
+            val view = _viewRef?.get()
+            if (view == null) {
+                _enable = false
+            }
+            return view
+        }
 
     private var _enable = false
         set(value) {
@@ -19,8 +25,8 @@ internal abstract class LifecycleHolder {
             }
         }
 
-    fun setActivity(activity: Activity?) {
-        if (activity == null || activity.isFinishing) {
+    fun setActivity(activity: Activity) {
+        if (activity.isFinishing) {
             setView(null)
             return
         }
@@ -29,12 +35,7 @@ internal abstract class LifecycleHolder {
         setView(window.decorView)
     }
 
-    fun setDialog(dialog: Dialog?) {
-        if (dialog == null) {
-            setView(null)
-            return
-        }
-
+    fun setDialog(dialog: Dialog) {
         val context = dialog.context
         if (context is Activity && context.isFinishing) {
             setView(null)
