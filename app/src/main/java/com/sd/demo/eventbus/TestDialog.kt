@@ -3,7 +3,6 @@ package com.sd.demo.eventbus
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import com.sd.lib.eventbus.FEventBus
 import com.sd.lib.eventbus.FEventObserver
@@ -22,7 +21,7 @@ class TestDialog(context: Context) : Dialog(context) {
 
     private val _eventObserver = object : FEventObserver<TestEvent>() {
         override fun onEvent(event: TestEvent) {
-            Log.i(TAG, "onEvent dialog:$event")
+            logMsg { "onEvent dialog:$event" }
         }
     }
 
