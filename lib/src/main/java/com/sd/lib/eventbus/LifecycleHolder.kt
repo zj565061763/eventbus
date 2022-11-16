@@ -8,6 +8,9 @@ import java.lang.ref.WeakReference
 internal abstract class LifecycleHolder {
     private var _viewRef: WeakReference<View>? = null
 
+    private val currentView: View?
+        get() = _viewRef?.get()
+
     private var _enable = false
         set(value) {
             if (field != value) {
@@ -15,9 +18,6 @@ internal abstract class LifecycleHolder {
                 onLifecycleChanged(value)
             }
         }
-
-    private val currentView: View?
-        get() = _viewRef?.get()
 
     fun setActivity(activity: Activity?) {
         if (activity == null) {
