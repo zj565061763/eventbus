@@ -12,6 +12,11 @@ import com.sd.lib.eventbus.FEventObserver;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
+    static {
+        // 设置调试模式，输入日志
+        FEventBus.getDefault().setDebug(true);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -6,18 +6,17 @@ import android.view.View
 import java.lang.reflect.ParameterizedType
 
 abstract class FEventObserver<T> {
-    @JvmField
-    val mEventClass: Class<*>
+    internal val eventClass: Class<*>
 
     init {
         val clazz = findTargetClass()
         val parameterizedType = clazz.genericSuperclass as ParameterizedType
         val types = parameterizedType.actualTypeArguments
 
-        mEventClass = if (types.isNotEmpty()) {
+        eventClass = if (types.isNotEmpty()) {
             types[0] as Class<*>
         } else {
-            throw RuntimeException("generic type not found")
+            throw RuntimeException("Generic type not found.")
         }
     }
 
@@ -31,11 +30,11 @@ abstract class FEventObserver<T> {
     }
 
     fun register() {
-        FEventBus.getDefault().register(this)
+        FEventBus.default.register(this)
     }
 
     fun unregister() {
-        FEventBus.getDefault().unregister(this)
+        FEventBus.default.unregister(this)
     }
 
     fun bindActivity(activity: Activity?) {
