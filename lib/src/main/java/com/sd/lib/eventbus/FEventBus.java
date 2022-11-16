@@ -10,11 +10,10 @@ public class FEventBus {
     private static FEventBus sInstance;
 
     private final Map<Class<?>, Map<FEventObserver, String>> mObserverHolder = new HashMap<>();
-    private final Map<Class<?>, Object> mStickyHolder = new HashMap<>();
 
     private boolean mIsDebug;
 
-    public FEventBus() {
+    private FEventBus() {
         // 保持Public，支持创建新的对象
     }
 
@@ -59,17 +58,6 @@ public class FEventBus {
                         + " observer:" + observer
                         + " size:" + holder.size()
                         + " sizeTotal:" + mObserverHolder.size());
-            }
-
-            final Object sticky = mStickyHolder.get(clazz);
-            if (sticky != null) {
-                if (mIsDebug) {
-                    Log.i(FEventBus.class.getSimpleName(), "notify sticky when register"
-                            + " observer:" + observer
-                            + " sticky:" + sticky);
-                }
-
-                notifyObserver(observer, sticky);
             }
         }
     }
@@ -134,45 +122,6 @@ public class FEventBus {
         for (FEventObserver item : holder.keySet()) {
             notifyObserver(item, event);
         }
-    }
-
-    //---------- sticky ----------
-
-    /**
-     * 发送粘性事件
-     *
-     * @param event
-     */
-    public synchronized void postSticky(Object event) {
-        if (event == null)
-            return;
-
-        final Class<?> clazz = event.getClass();
-        mStickyHolder.put(clazz, event);
-
-        if (mIsDebug)
-            Log.i(FEventBus.class.getSimpleName(), "postSticky:" + event);
-
-        post(event);
-    }
-
-    /**
-     * 移除某个粘性事件
-     *
-     * @param clazz
-     */
-    public synchronized void removeSticky(Class<?> clazz) {
-        if (clazz == null)
-            return;
-
-        mStickyHolder.remove(clazz);
-    }
-
-    /**
-     * 移除所有粘性事件
-     */
-    public synchronized void removeAllSticky() {
-        mStickyHolder.clear();
     }
 
     /**
