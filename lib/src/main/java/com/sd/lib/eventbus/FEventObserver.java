@@ -69,15 +69,16 @@ public abstract class FEventObserver<T> {
 
     private LifecycleHolder getLifecycleHolder() {
         if (mLifecycleHolder == null) {
-            mLifecycleHolder = new LifecycleHolder(new LifecycleHolder.Callback() {
+            mLifecycleHolder = new LifecycleHolder() {
                 @Override
-                public void onLifecycleStateChanged(boolean enable) {
-                    if (enable)
+                protected void onLifecycleChanged(boolean enable) {
+                    if (enable) {
                         register();
-                    else
+                    } else {
                         unregister();
+                    }
                 }
-            });
+            };
         }
         return mLifecycleHolder;
     }
