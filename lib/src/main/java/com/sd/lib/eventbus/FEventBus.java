@@ -6,8 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FEventBus
-{
+public class FEventBus {
     private static FEventBus sInstance;
 
     private final Map<Class<?>, Map<FEventObserver, String>> mObserverHolder = new HashMap<>();
@@ -15,17 +14,13 @@ public class FEventBus
 
     private boolean mIsDebug;
 
-    public FEventBus()
-    {
+    public FEventBus() {
         // 保持Public，支持创建新的对象
     }
 
-    public static FEventBus getDefault()
-    {
-        if (sInstance == null)
-        {
-            synchronized (FEventBus.class)
-            {
+    public static FEventBus getDefault() {
+        if (sInstance == null) {
+            synchronized (FEventBus.class) {
                 if (sInstance == null)
                     sInstance = new FEventBus();
             }
@@ -33,8 +28,7 @@ public class FEventBus
         return sInstance;
     }
 
-    public void setDebug(boolean debug)
-    {
+    public void setDebug(boolean debug) {
         mIsDebug = debug;
     }
 
@@ -43,8 +37,7 @@ public class FEventBus
      *
      * @param observer
      */
-    public synchronized void register(final FEventObserver observer)
-    {
+    public synchronized void register(final FEventObserver observer) {
         if (observer == null)
             return;
 
@@ -53,17 +46,14 @@ public class FEventBus
             throw new NullPointerException("observer's event class is null");
 
         Map<FEventObserver, String> holder = mObserverHolder.get(clazz);
-        if (holder == null)
-        {
+        if (holder == null) {
             holder = new ConcurrentHashMap<>();
             mObserverHolder.put(clazz, holder);
         }
 
         final String put = holder.put(observer, "");
-        if (put == null)
-        {
-            if (mIsDebug)
-            {
+        if (put == null) {
+            if (mIsDebug) {
                 Log.i(FEventBus.class.getSimpleName(), "register +++++"
                         + " class:" + clazz.getName()
                         + " observer:" + observer
@@ -72,10 +62,8 @@ public class FEventBus
             }
 
             final Object sticky = mStickyHolder.get(clazz);
-            if (sticky != null)
-            {
-                if (mIsDebug)
-                {
+            if (sticky != null) {
+                if (mIsDebug) {
                     Log.i(FEventBus.class.getSimpleName(), "notify sticky when register"
                             + " observer:" + observer
                             + " sticky:" + sticky);
@@ -91,8 +79,7 @@ public class FEventBus
      *
      * @param observer
      */
-    public synchronized void unregister(final FEventObserver observer)
-    {
+    public synchronized void unregister(final FEventObserver observer) {
         if (observer == null)
             return;
 
@@ -105,13 +92,11 @@ public class FEventBus
             return;
 
         final String remove = holder.remove(observer);
-        if (remove != null)
-        {
+        if (remove != null) {
             if (holder.isEmpty())
                 mObserverHolder.remove(clazz);
 
-            if (mIsDebug)
-            {
+            if (mIsDebug) {
                 Log.i(FEventBus.class.getSimpleName(), "unregister -----"
                         + " class:" + clazz.getName()
                         + " observer:" + observer
@@ -126,8 +111,7 @@ public class FEventBus
      *
      * @param event
      */
-    public synchronized void post(final Object event)
-    {
+    public synchronized void post(final Object event) {
         if (event == null)
             return;
 
@@ -136,21 +120,18 @@ public class FEventBus
         if (holder == null)
             return;
 
-        if (holder.isEmpty())
-        {
+        if (holder.isEmpty()) {
             mObserverHolder.remove(clazz);
             return;
         }
 
-        if (mIsDebug)
-        {
+        if (mIsDebug) {
             Log.i(FEventBus.class.getSimpleName(), "post----->"
                     + " event:" + event
                     + " size:" + holder.size());
         }
 
-        for (FEventObserver item : holder.keySet())
-        {
+        for (FEventObserver item : holder.keySet()) {
             notifyObserver(item, event);
         }
     }
@@ -162,8 +143,7 @@ public class FEventBus
      *
      * @param event
      */
-    public synchronized void postSticky(Object event)
-    {
+    public synchronized void postSticky(Object event) {
         if (event == null)
             return;
 
@@ -181,8 +161,7 @@ public class FEventBus
      *
      * @param clazz
      */
-    public synchronized void removeSticky(Class<?> clazz)
-    {
+    public synchronized void removeSticky(Class<?> clazz) {
         if (clazz == null)
             return;
 
@@ -192,8 +171,7 @@ public class FEventBus
     /**
      * 移除所有粘性事件
      */
-    public synchronized void removeAllSticky()
-    {
+    public synchronized void removeAllSticky() {
         mStickyHolder.clear();
     }
 
@@ -203,15 +181,11 @@ public class FEventBus
      * @param observer
      * @param event
      */
-    private void notifyObserver(final FEventObserver observer, final Object event)
-    {
-        Utils.runOnMainThread(new Runnable()
-        {
+    private void notifyObserver(final FEventObserver observer, final Object event) {
+        Utils.runOnMainThread(new Runnable() {
             @Override
-            public void run()
-            {
-                if (mIsDebug)
-                {
+            public void run() {
+                if (mIsDebug) {
                     Log.i(FEventBus.class.getSimpleName(), "notifyObserver"
                             + " event:" + event
                             + " observer:" + observer);

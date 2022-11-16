@@ -11,12 +11,10 @@ import java.lang.reflect.Type;
 /**
  * 事件观察者
  */
-public abstract class FEventObserver<T>
-{
+public abstract class FEventObserver<T> {
     final Class<T> mEventClass;
 
-    public FEventObserver()
-    {
+    public FEventObserver() {
         final Class<?> clazz = findTargetClass();
         final ParameterizedType parameterizedType = (ParameterizedType) clazz.getGenericSuperclass();
         final Type[] types = parameterizedType.getActualTypeArguments();
@@ -27,11 +25,9 @@ public abstract class FEventObserver<T>
             throw new RuntimeException("generic type not found");
     }
 
-    private Class<?> findTargetClass()
-    {
+    private Class<?> findTargetClass() {
         Class<?> clazz = getClass();
-        while (true)
-        {
+        while (true) {
             if (clazz.getSuperclass() == FEventObserver.class)
                 break;
             else
@@ -52,8 +48,7 @@ public abstract class FEventObserver<T>
      *
      * @return
      */
-    public final FEventObserver<T> register()
-    {
+    public final FEventObserver<T> register() {
         FEventBus.getDefault().register(this);
         return this;
     }
@@ -63,8 +58,7 @@ public abstract class FEventObserver<T>
      *
      * @return
      */
-    public final FEventObserver<T> unregister()
-    {
+    public final FEventObserver<T> unregister() {
         FEventBus.getDefault().unregister(this);
         return this;
     }
@@ -73,15 +67,11 @@ public abstract class FEventObserver<T>
 
     private LifecycleHolder mLifecycleHolder;
 
-    private LifecycleHolder getLifecycleHolder()
-    {
-        if (mLifecycleHolder == null)
-        {
-            mLifecycleHolder = new LifecycleHolder(new LifecycleHolder.Callback()
-            {
+    private LifecycleHolder getLifecycleHolder() {
+        if (mLifecycleHolder == null) {
+            mLifecycleHolder = new LifecycleHolder(new LifecycleHolder.Callback() {
                 @Override
-                public void onLifecycleStateChanged(boolean enable)
-                {
+                public void onLifecycleStateChanged(boolean enable) {
                     if (enable)
                         register();
                     else
@@ -100,8 +90,7 @@ public abstract class FEventObserver<T>
      * @param activity
      * @return
      */
-    public final boolean bindLifecycle(Activity activity)
-    {
+    public final boolean bindLifecycle(Activity activity) {
         if (activity == null || activity.isFinishing())
             return false;
 
@@ -117,8 +106,7 @@ public abstract class FEventObserver<T>
      * @param dialog
      * @return
      */
-    public final boolean bindLifecycle(Dialog dialog)
-    {
+    public final boolean bindLifecycle(Dialog dialog) {
         if (dialog == null)
             return false;
 
@@ -136,14 +124,12 @@ public abstract class FEventObserver<T>
      * @param view
      * @return true-绑定成功；false-绑定失败
      */
-    public final boolean bindLifecycle(View view)
-    {
+    public final boolean bindLifecycle(View view) {
         if (view == null)
             return false;
 
         final Context context = view.getContext();
-        if (context instanceof Activity)
-        {
+        if (context instanceof Activity) {
             final Activity activity = (Activity) context;
             if (activity.isFinishing())
                 return false;
@@ -156,31 +142,7 @@ public abstract class FEventObserver<T>
     /**
      * 如果已经绑定生命周期，则解除生命周期绑定并取消注册
      */
-    public final void unbindLifecycle()
-    {
+    public final void unbindLifecycle() {
         getLifecycleHolder().setView(null);
-    }
-
-    //---------- Lifecycle end ----------
-
-    @Deprecated
-    public final FEventObserver<T> setLifecycle(Activity activity)
-    {
-        getLifecycleHolder().setActivity(activity);
-        return this;
-    }
-
-    @Deprecated
-    public final FEventObserver<T> setLifecycle(Dialog dialog)
-    {
-        getLifecycleHolder().setDialog(dialog);
-        return this;
-    }
-
-    @Deprecated
-    public final FEventObserver<T> setLifecycle(View view)
-    {
-        getLifecycleHolder().setView(view);
-        return this;
     }
 }
