@@ -10,21 +10,19 @@ import com.sd.lib.eventbus.FEventObserver
 
 class TestDialog(context: Context) : Dialog(context) {
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.dialog_test)
+        findViewById<View>(R.id.btn_post).setOnClickListener {
+            FEventBus.post(TestEvent())
+        }
+
         _eventObserver.bindDialog(this)
     }
 
     private val _eventObserver = object : FEventObserver<TestEvent>() {
         override fun onEvent(event: TestEvent) {
             Log.i(TAG, "onEvent dialog:$event")
-        }
-    }
-
-    init {
-        setContentView(R.layout.dialog_test)
-        findViewById<View>(R.id.btn_post).setOnClickListener {
-            FEventBus.post(TestEvent())
         }
     }
 
