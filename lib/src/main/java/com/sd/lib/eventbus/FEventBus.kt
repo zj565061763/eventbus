@@ -1,7 +1,6 @@
 package com.sd.lib.eventbus
 
 import android.util.Log
-import com.sd.lib.eventbus.Utils.runOnUiThread
 import java.util.concurrent.ConcurrentHashMap
 
 object FEventBus {
@@ -66,7 +65,7 @@ object FEventBus {
      * 通知观察者
      */
     private fun notifyObserver(observer: FEventObserver<Any>, event: Any) {
-        runOnUiThread {
+        Utils.runOnUiThread {
             logMsg { "notify $event $observer" }
             observer.onEvent(event)
         }
