@@ -16,7 +16,7 @@ abstract class FEventObserver<T> {
         eventClass = if (types.isNotEmpty()) {
             types[0] as Class<*>
         } else {
-            throw RuntimeException("Generic type not found.")
+            error("Generic type not found.")
         }
     }
 
